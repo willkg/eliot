@@ -14,7 +14,7 @@
 
 (set -o posix; set) | grep ELIOT_GUNICORN
 
-cd /app/eliot-service/
+cd /app/
 
 ${ELIOT_GUNICORN_CMD_PREFIX} gunicorn \
     --bind 0.0.0.0:"${ELIOT_GUNICORN_PORT}" \

@@ -6,8 +6,6 @@
    :maxdepth: 1
 
    overview
-   upload
-   download
    symbolication
 
 .. toctree::
@@ -17,10 +15,7 @@
    dev
    contributing
    configuration
-   frontend
-   redis
    adr_log
-   endtoendtesting
 
 
 Indices and tables

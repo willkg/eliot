@@ -430,7 +430,7 @@ BROKEN_EVENT = {
                     "frames": [
                         {
                             "filename": "eliot/cache_manager.py",
-                            "abs_path": "/app/eliot-service/eliot/cache_manager.py",
+                            "abs_path": "/app/eliot/cache_manager.py",
                             "function": "_event_generator",
                             "module": "eliot.cache_manager",
                             "lineno": ANY,
@@ -453,7 +453,7 @@ BROKEN_EVENT = {
                         },
                         {
                             "filename": "tests/test_cache_manager.py",
-                            "abs_path": "/app/eliot-service/tests/test_cache_manager.py",
+                            "abs_path": "/app/tests/test_cache_manager.py",
                             "function": "mock_make_room",
                             "module": "tests.test_cache_manager",
                             "lineno": ANY,

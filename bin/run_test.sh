@@ -9,9 +9,8 @@ set -eo pipefail
 if [ "$1" = "--shell" ]
 then
     bash
+    exit
 fi
 
-# Run eliot-service tests
-pushd eliot-service
+# Run eliot tests
 pytest
-popd

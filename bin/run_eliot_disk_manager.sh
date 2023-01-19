@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-cd /app/eliot-service/
+cd /app/
 
 # Run cache manager in a loop so that if it dies (ignore exit value), the loop
 # pauses for 1 minute and then starts up again. This expects disk cache manager

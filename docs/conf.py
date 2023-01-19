@@ -26,11 +26,8 @@ os.environ["TOOL_ENV"] = "true"
 
 
 BASEDIR = Path(__file__).parent.parent
-# Insert repo base dir which will pick up Tecken webapp things
+# Insert repo base dir which will pick up Eliot things
 sys.path.insert(0, str(BASEDIR))
-
-# Insert Eliot base dir for Eliot things
-sys.path.insert(0, str(BASEDIR / "eliot-service"))
 
 # Insert this directory to pick up extensions
 sys.path.insert(0, str(Path(__file__).parent))
@@ -43,9 +40,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 # -- Custom configuration -------------------------------------------------
 
-extlinks = {
-    "base_url": ("https://symbols.mozilla.org/%s", "https://symbols.mozilla.org")
-}
+extlinks = {}
 
 # -- General configuration ------------------------------------------------
 
@@ -78,9 +73,9 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "Tecken: Symbols at Mozilla"
-copyright = "2016-2022 Mozilla Foundation"
-author = "Tecken team"
+project = "Eliot: Mozilla Symbolication Services"
+copyright = "2020-2022 Mozilla Foundation"
+author = "Eliot team"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -154,7 +149,7 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
-# html_title = u'Tecken v0.1'
+# html_title = u'Eliot v0.1'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 # html_short_title = None
@@ -239,7 +234,7 @@ html_sidebars = {"**": ["globaltoc.html", "relations.html", "searchbox.html"]}
 # html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "Teckendoc"
+htmlhelp_basename = "Eliotdoc"
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -258,7 +253,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "Tecken.tex", "Tecken Documentation", "Mozilla", "manual")
+    (master_doc, "Eliot.tex", "Eliot Documentation", "Mozilla", "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -286,7 +281,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "tecken", "Tecken Documentation", [author], 1)]
+man_pages = [(master_doc, "eliot", "Eliot Documentation", [author], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -300,10 +295,10 @@ man_pages = [(master_doc, "tecken", "Tecken Documentation", [author], 1)]
 texinfo_documents = [
     (
         master_doc,
-        "Tecken",
-        "Tecken Documentation",
+        "Eliot",
+        "Eliot Documentation",
         author,
-        "Tecken",
+        "Eliot",
         "One line description of project.",
         "Miscellaneous",
     )

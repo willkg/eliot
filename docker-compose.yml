@@ -36,9 +36,7 @@ services:
       - docker/config/local_dev.env
       - docker/config/test.env
     links:
-      - db
       - fakesentry
-      - redis-cache
     volumes:
       - $PWD:/app
 
@@ -49,9 +47,7 @@ services:
       - docker/config/local_dev.env
       - docker/config/test.env
     links:
-      - db
       - fakesentry
-      - redis-cache
 
   # https://github.com/willkg/kent
   fakesentry:

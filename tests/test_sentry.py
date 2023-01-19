@@ -52,7 +52,7 @@ BROKEN_EVENT = {
                 "stacktrace": {
                     "frames": [
                         {
-                            "abs_path": "/app/eliot-service/falcon/app.py",
+                            "abs_path": "/app/falcon/app.py",
                             "context_line": ANY,
                             "filename": "falcon/app.py",
                             "function": "falcon.app.App.__call__",
@@ -75,7 +75,7 @@ BROKEN_EVENT = {
                             },
                         },
                         {
-                            "abs_path": "/app/eliot-service/eliot/health_resource.py",
+                            "abs_path": "/app/eliot/health_resource.py",
                             "context_line": ANY,
                             "filename": "eliot/health_resource.py",
                             "function": "on_get",

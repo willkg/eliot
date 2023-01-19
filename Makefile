@@ -45,7 +45,7 @@ build: .env  ## | Build docker images.
 
 .PHONY: run
 run: .env .docker-build  ## | Run eliot and services.
-	${DC} up eliot frontend fakesentry
+	${DC} up eliot fakesentry
 
 .PHONY: stop
 stop: .env  ## | Stop docker containers.
