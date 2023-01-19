@@ -16,35 +16,12 @@ if [ -z "$*" ]; then
     exit 1
 fi
 
-# Only wait for backend services in local development and CI
-if [ ! -z ${DEVELOPMENT+check} ]; then
-    echo "Waiting for services..."
-    urlwait postgres://db:5432 10
-    urlwait redis://redis-cache:6379 10
-fi
-
 SERVICE=$1
 shift
 
 case ${SERVICE} in
-web)  ## Run Tecken web service
-    exec /app/bin/run_web.sh $@
-    ;;
 eliot)  ## Run Eliot service
     exec honcho -f /app/eliot-service/Procfile start
-    ;;
-worker)  ## Run Celery worker
-    # FIXME(willkg): 1728210: remove this after we remove the celery infra
-    exec ${CMD_PREFIX} celery -A tecken.celery:app worker --loglevel INFO
-    ;;
-worker-purge)  ## Purge Celery tasks
-    # FIXME(willkg): 1728210: remove this after we remove the celery infra
-    # Start worker but first purge ALL old stale tasks.
-    # Only useful in local development where you might have accidentally
-    # started waaaay too make background tasks when debugging something.
-    # Or perhaps the jobs belong to the wrong branch as you stop/checkout/start
-    # the docker container.
-    exec celery -A tecken.celery:app worker --loglevel INFO --purge
     ;;
 bash)  ## Open a bash shell or run something else
     if [ -z "$*" ]; then

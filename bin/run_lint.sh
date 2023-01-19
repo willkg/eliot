@@ -12,7 +12,7 @@
 
 set -e
 
-BLACKARGS=("--line-length=88" "--target-version=py36" bin tecken eliot-service systemtests)
+BLACKARGS=("--line-length=88" "--target-version=py36" bin eliot-service)
 
 if [[ $1 == "--fix" ]]; then
     echo ">>> black fix"
@@ -36,6 +36,4 @@ else
         # files in the tree.
         python bin/license_check.py .
     fi
-
-    # NOTE(willkg): linting frontend files is done in another script
 fi

@@ -28,7 +28,7 @@ help:
 	@echo ""
 	@echo "Adjust your .env file to set configuration."
 	@echo ""
-	@echo "See https://tecken.readthedocs.io/ for more documentation."
+	@echo "See https://eliot.readthedocs.io/ for more documentation."
 
 # Dev configuration steps
 .docker-build:
@@ -39,74 +39,54 @@ help:
 
 .PHONY: build
 build: .env  ## | Build docker images.
-	${DC} build --build-arg userid=${USE_UID} --build-arg groupid=${USE_GID} --progress plain base frontend
-	${DC} build --progress plain db fakesentry redis-cache localstack oidcprovider statsd
+	${DC} build --build-arg userid=${USE_UID} --build-arg groupid=${USE_GID} --progress plain base
+	${DC} build --progress plain fakesentry statsd
 	touch .docker-build
 
-.PHONY: setup
-setup: .env  ## | Initialize services.
-	${DC} run --rm web bash /app/bin/setup-services.sh
-
 .PHONY: run
-run: .env .docker-build  ## | Run the web app and services.
-	${DC} up web eliot frontend fakesentry
+run: .env .docker-build  ## | Run eliot and services.
+	${DC} up eliot frontend fakesentry
 
 .PHONY: stop
 stop: .env  ## | Stop docker containers.
 	${DC} stop
 
 .PHONY: shell
-shell: .env .docker-build  ## | Open a shell in web container.
-	${DC} run --rm web bash
+shell: .env .docker-build  ## | Open a shell in eliot service container.
+	${DC} run --rm eliot bash
 
 .PHONY: clean
 clean: .env stop  ## | Stop and remove docker containers and artifacts.
 	${DC} rm -f
 	rm -fr .docker-build
-	rm -rf frontend/build/
-
-.PHONY: clear-cache
-clear-cache:  ## | Clear Redis cache.
-	${DC} run --rm redis-cache redis-cli -h redis-cache FLUSHDB
-
-.PHONY: redis-cache-cli
-redis-cache-cli: .env .docker-build  ## | Open Redis CLI to cache Redis server.
-	${DC} run --rm redis-cache redis-cli -h redis-cache
-
-.PHONY: psql
-psql: .env .docker-build  ## | Open psql cli.
-	@echo "NOTE: Password is 'postgres'."
-	${DC} run --rm db psql -h db -U postgres -d tecken
 
 .PHONY: test
 test: .env .docker-build  ## | Run Python unit test suite.
-	${DC} up -d db redis-cache localstack statsd oidcprovider
+	${DC} up -d fakesentry statsd
 	${DC} run --rm test bash ./bin/run_test.sh
 
 .PHONY: testshell
 testshell: .env .docker-build  ## | Open shell in test environment.
-	${DC} up -d db redis-cache localstack statsd oidcprovider
+	${DC} up -d fakesentry statsd
 	${DC} run --rm test bash ./bin/run_test.sh --shell
 
 .PHONY: docs
 docs: .env .docker-build  ## | Build docs.
-	${DC} run --rm --user ${USE_UID} --no-deps web bash make -C docs/ clean
-	${DC} run --rm --user ${USE_UID} --no-deps web bash make -C docs/ html
+	${DC} run --rm --user ${USE_UID} --no-deps eliot bash make -C docs/ clean
+	${DC} run --rm --user ${USE_UID} --no-deps eliot bash make -C docs/ html
 
 .PHONY: lint
 lint: .env .docker-build  ## | Lint code.
 	${DC} run --rm --no-deps test bash ./bin/run_lint.sh
-	${DC} run --rm frontend lint
 
 .PHONY: lintfix
 lintfix: .env .docker-build  ## | Reformat code.
 	${DC} run --rm --no-deps test bash ./bin/run_lint.sh --fix
-	${DC} run --rm frontend lintfix
 
 .PHONY: rebuildreqs
 rebuildreqs: .env .docker-build  ## | Rebuild requirements.txt file after requirements.in changes.
-	${DC} run --rm --no-deps web bash pip-compile --generate-hashes
+	${DC} run --rm --no-deps eliot bash pip-compile --generate-hashes
 
 .PHONY: updatereqs
 updatereqs: .env .docker-build  ## | Update deps in requirements.txt file.
-	${DC} run --rm --no-deps web bash pip-compile --generate-hashes -U
+	${DC} run --rm --no-deps eliot bash pip-compile --generate-hashes -U

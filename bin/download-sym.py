@@ -30,7 +30,7 @@ def download_sym_file(ctx, base_url, outputdir, debugid, debugfilename):
     # Download sym file
     path = f"{debugfilename}/{debugid}/{debugfilename}.sym"
     url = urljoin(base_url, path)
-    headers = {"User-Agent": "tecken-download-sym"}
+    headers = {"User-Agent": "eliot-download-sym"}
 
     click.echo(f"Downloading {url} ...")
     resp = requests.get(url, headers=headers)

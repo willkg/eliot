@@ -1,26 +1,19 @@
 {
-  "name": "tecken",
-  "description": "The Mozilla Symbol Server",
+  "name": "eliot",
+  "description": "The Mozilla Symbolication Server",
   "participate": {
-    "docs": "https://tecken.readthedocs.io",
-    "irc": "irc://irc.mozilla.org/#breakpad",
-    "irc-contacts": ["peterbe", "ted"]
+    "docs": "https://eliot.readthedocs.io"
   },
-
   "repository": {
-    "url": "https://github.com/mozilla-services/tecken",
+    "url": "https://github.com/mozilla-services/eliot",
     "license": "MPL 2.0"
   },
   "bugs": {
-    "list":
-      "https://bugzilla.mozilla.org/buglist.cgi?resolution=---&query_format=advanced&product=Tecken",
-    "report":
-      "https://bugzilla.mozilla.org/enter_bug.cgi?product=Tecken&component=General"
+    "list": "https://bugzilla.mozilla.org/buglist.cgi?resolution=---&query_format=advanced&product=Eliot",
+    "report": "https://bugzilla.mozilla.org/enter_bug.cgi?product=Eliot&component=General"
   },
   "urls": {
-    "dev": "https://symbols.dev.mozaws.net",
-    "stage": "https://symbols.stage.mozaws.net",
-    "prod": "https://symbols.mozilla.org"
-  },
-  "whatsdeployed": "https://whatsdeployed.io/s-5HY"
+    "stage": "https://symbolication.stage.mozaws.net/",
+    "prod": "https://symbolication.services.mozilla.com/"
+  }
 }

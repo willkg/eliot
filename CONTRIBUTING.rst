@@ -13,7 +13,7 @@ etiquette guidelines. For more details please see the `CODE_OF_CONDUCT.md file
 Development, conventions, etc
 =============================
 
-All our documentation is at `<https://tecken.readthedocs.io/>`_.
+All our documentation is at `<https://eliot.readthedocs.io/>`_.
 
 
 Contact

@@ -7,40 +7,22 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
-    image: tecken:build
+    image: eliot:build
     env_file:
       - docker/config/local_dev.env
       - .env
-
-  # Web container is a prod-like fully-functioning container.
-  web:
-    extends:
-      service: base
-    depends_on:
-      - db
-      - redis-cache
-    ports:
-      - "8000:8000"
-    links:
-      - db
-      - fakesentry
-      - redis-cache
-      - localstack
-      - oidcprovider
-      - statsd
-    volumes:
-      - $PWD:/app
-    command: ["web", "--dev"]
 
   # Symbolicator service
   eliot:
     extends:
       service: base
     ports:
-      - "8050:8000"
+      - "8000:8000"
     depends_on:
+      - fakesentry
       - statsd
     links:
+      - fakesentry
       - statsd
     volumes:
       - $PWD:/app
@@ -71,60 +53,6 @@ services:
       - fakesentry
       - redis-cache
 
-  # Web container is a prod-like fully-functioning container.
-  gunicorn:
-    extends:
-      service: base
-    ports:
-      - "8000:8000"
-    links:
-      - db
-      - redis-cache
-    command: web
-
-  frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
-    environment:
-      - NODE_ENV=development
-    ports:
-      - "3000:3000"
-      - "35729:35729"
-    volumes:
-      - $PWD/frontend:/app
-    command: start
-
-  # Same as 'frontend' but no volumes or command
-  frontend-ci:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
-
-  # https://hub.docker.com/_/postgres/
-  db:
-    image: postgres:12.7
-    environment:
-      # Create the superuser account
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=tecken
-
-  redis-cache:
-    image: redis:3.2
-
-  # https://hub.docker.com/r/localstack/localstack/
-  # localstack running a fake AWS S3 and SQS
-  localstack:
-    image: localstack/localstack:1.1.0
-    environment:
-      - SERVICES=s3
-      - DEFAULT_REGION=us-east-1
-      - HOSTNAME=localstack
-      - HOSTNAME_EXTERNAL=localstack
-    ports:
-      - "4566:4566"
-
   # https://github.com/willkg/kent
   fakesentry:
     build:
@@ -133,14 +61,6 @@ services:
     ports:
       - "8090:8090"
     command: run --host 0.0.0.0 --port 8090
-
-  # https://hub.docker.com/r/mozilla/oidc-testprovider
-  oidcprovider:
-    build:
-      context: docker/images/oidcprovider
-    image: local/tecken_oidcprovider
-    ports:
-      - "8080:8080"
 
   # https://hub.docker.com/r/hopsoft/graphite-statsd/
   statsd:
