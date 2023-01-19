@@ -2,7 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-# Tecken documentation build configuration file, created by
+# Eliot documentation build configuration file, created by
 # sphinx-quickstart on Tue May 10 18:20:27 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -26,6 +26,7 @@ os.environ["TOOL_ENV"] = "true"
 
 
 BASEDIR = Path(__file__).parent.parent
+
 # Insert repo base dir which will pick up Eliot things
 sys.path.insert(0, str(BASEDIR))
 

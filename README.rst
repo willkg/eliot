@@ -18,6 +18,6 @@ Project details
 
 * Free software: Mozilla Public License version 2.0
 * Documentation: `<https://eliot.readthedocs.io/>`_
-* Community Participation Guidelines: `<https://github.com/mozilla-services/tecken/blob/main/CODE_OF_CONDUCT.md>`_
+* Community Participation Guidelines: `<https://github.com/mozilla-services/eliot/blob/main/CODE_OF_CONDUCT.md>`_
 * Bugs: `Report an Eliot bug <https://bugzilla.mozilla.org/enter_bug.cgi?format=__standard__&product=Eliot>`_
 * Chat: `#crashreporting matrix channel <https://chat.mozilla.org/#/room/#crashreporting:mozilla.org>`_

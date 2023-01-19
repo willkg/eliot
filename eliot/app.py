@@ -85,10 +85,7 @@ def build_config_manager():
             # Pull configuration from environment variables
             ConfigOSEnv()
         ],
-        doc=(
-            "For configuration help, see "
-            "https://tecken.readthedocs.io/en/latest/symbolicator.html"
-        ),
+        doc="For configuration help, see https://eliot.readthedocs.io/en/latest/",
     )
     return config.with_namespace("eliot")
 

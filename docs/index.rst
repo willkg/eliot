@@ -9,7 +9,7 @@
    symbolication
 
 .. toctree::
-   :caption: Developers/Admin of Tecken
+   :caption: Developers/Admin of Eliot
    :maxdepth: 1
 
    dev

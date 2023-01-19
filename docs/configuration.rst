@@ -25,7 +25,7 @@ Gunicorn configuration:
    https://docs.gunicorn.org/en/stable/design.html#how-many-workers
 
    Used in `bin/run_eliot_web.sh
-   <https://github.com/mozilla-services/tecken/blob/main/bin/run_eliot_web.sh>`_.
+   <https://github.com/mozilla-services/eliot/blob/main/bin/run_eliot_web.sh>`_.
 
 
 .. everett:option:: ELIOT_GUNICORN_TIMEOUT
@@ -36,7 +36,7 @@ Gunicorn configuration:
    https://docs.gunicorn.org/en/stable/settings.html#timeout
 
    Used in `bin/run_eliot_web.sh
-   <https://github.com/mozilla-services/tecken/blob/main/bin/run_eliot_web.sh>`_.
+   <https://github.com/mozilla-services/eliot/blob/main/bin/run_eliot_web.sh>`_.
 
 
 .. everett:option:: ELIOT_GUNICORN_PORT
@@ -45,7 +45,7 @@ Gunicorn configuration:
    Specifies the port to listen to.
 
    Used in `bin/run_eliot_web.sh
-   <https://github.com/mozilla-services/tecken/blob/main/bin/run_eliot_web.sh>`_.
+   <https://github.com/mozilla-services/eliot/blob/main/bin/run_eliot_web.sh>`_.
 
 
 .. everett:option:: ELIOT_GUNICORN_CMD_PREFIX
@@ -54,7 +54,7 @@ Gunicorn configuration:
    Specifies a command prefix to run the gunicorn process in.
 
    Used in `bin/run_eliot_web.sh
-   <https://github.com/mozilla-services/tecken/blob/main/bin/run_eliot_web.sh>`_.
+   <https://github.com/mozilla-services/eliot/blob/main/bin/run_eliot_web.sh>`_.
 
 
 Webapp configuration:

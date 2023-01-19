@@ -2,7 +2,7 @@
 
 # Architecture knowledge base
 
-Welcome 👋 to the architecture knowledge base of Tecken.
+Welcome 👋 to the architecture knowledge base of Eliot.
 You will find here all the Architecture Decision Records (ADR) of the project.
 
 ## Definition and purpose

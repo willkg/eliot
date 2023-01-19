@@ -68,7 +68,7 @@ def requests_session(default_timeout=5.0):
     session = requests.Session()
 
     # Set the User-Agent header so we can distinguish our stuff from other stuff
-    session.headers.update({"User-Agent": "tecken-requests/1.0"})
+    session.headers.update({"User-Agent": "eliot-requests/1.0"})
 
     adapter = HTTPAdapterWithTimeout(default_timeout=default_timeout)
     session.mount("http://", adapter)
