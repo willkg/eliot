@@ -85,7 +85,10 @@ def build_config_manager():
             # Pull configuration from environment variables
             ConfigOSEnv()
         ],
-        doc="For configuration help, see https://eliot.readthedocs.io/en/latest/",
+        doc=(
+            "For configuration help, see "
+            + "https://mozilla-eliot.readthedocs.io/en/latest/"
+        ),
     )
     return config.with_namespace("eliot")
 
