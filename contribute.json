@@ -2,7 +2,7 @@
   "name": "eliot",
   "description": "The Mozilla Symbolication Server",
   "participate": {
-    "docs": "https://eliot.readthedocs.io"
+    "docs": "https://mozilla-eliot.readthedocs.io"
   },
   "repository": {
     "url": "https://github.com/mozilla-services/eliot",

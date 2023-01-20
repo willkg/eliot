@@ -414,7 +414,7 @@ def get_cache_manager(config_manager=None):
     return DiskCacheManager(config_manager)
 
 
-@click.command(help="See https://eliot.readthedocs.io/en/latest/")
+@click.command(help="See https://mozilla-eliot.readthedocs.io/en/latest/")
 @click.option(
     "--print-config/--no-print-config",
     default=False,

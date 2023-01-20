@@ -28,7 +28,7 @@ help:
 	@echo ""
 	@echo "Adjust your .env file to set configuration."
 	@echo ""
-	@echo "See https://eliot.readthedocs.io/ for more documentation."
+	@echo "See https://mozilla-eliot.readthedocs.io/ for more documentation."
 
 # Dev configuration steps
 .docker-build:
