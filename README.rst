@@ -16,8 +16,10 @@ Project details
    :alt: ReadTheDocs status
    :target: https://mozilla-eliot.readthedocs.io/
 
+* Host: https://symbolication.services.mozilla.com/
+* Code: https://github.com/mozilla-services/eliot
 * Free software: Mozilla Public License version 2.0
 * Documentation: `<https://mozilla-eliot.readthedocs.io/>`_
 * Community Participation Guidelines: `<https://github.com/mozilla-services/eliot/blob/main/CODE_OF_CONDUCT.md>`_
-* Bugs: `Report an Eliot bug <https://bugzilla.mozilla.org/enter_bug.cgi?format=__standard__&product=Eliot>`_
+* Report bug: `Report an Eliot bug <https://bugzilla.mozilla.org/enter_bug.cgi?format=__standard__&product=Eliot>`_
 * Chat: `#crashreporting matrix channel <https://chat.mozilla.org/#/room/#crashreporting:mozilla.org>`_

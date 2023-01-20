@@ -2,19 +2,21 @@
 
 
 .. toctree::
-   :caption: Users of symbols
+   :caption: User documentation
    :maxdepth: 1
 
+   self
    overview
    symbolication
 
 .. toctree::
-   :caption: Developers/Admin of Eliot
+   :caption: Engineer/SRE documentation
    :maxdepth: 1
 
    dev
    contributing
    configuration
+   metrics
    adr_log
 
 
