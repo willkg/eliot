@@ -10,6 +10,8 @@ orbs:
 
 jobs:
   main:
+    machine:
+      image: ubuntu-2004:202201-02
     steps:
       - checkout
       - setup_remote_docker:
