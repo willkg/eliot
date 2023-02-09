@@ -83,14 +83,9 @@ jobs:
             make .env
             docker compose run --rm --no-deps test-ci bash make -C docs/ html
 
-      - run:
-          name: Push to Dockerhub
-          command: |
-            bin/circleci_push.sh "eliot:build"
-
 workflows:
   version: 2
-  build-test-push:
+  build-test:
     jobs:
       - main:
           filters:
