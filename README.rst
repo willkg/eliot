@@ -20,8 +20,3 @@ Project details
 * Bugs: `Report a Tecken bug <https://bugzilla.mozilla.org/enter_bug.cgi?format=__standard__&product=Eliot>`_
 * Chat: `#crashreporting matrix channel <https://chat.mozilla.org/#/room/#crashreporting:mozilla.org>`_
 
-
-
-
-
-
