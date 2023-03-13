@@ -7,12 +7,15 @@ Application-health related Falcon resources.
 """
 
 import json
+import logging
+import os
 
 from dockerflow.version import get_version
 import falcon
 import markus
 
 
+LOGGER = logging.getLogger(__name__)
 METRICS = markus.get_metrics(__name__)
 
 
@@ -36,6 +39,11 @@ class VersionResource:
         """Implement GET HTTP request."""
         METRICS.incr("version.count")
         resp.status = falcon.HTTP_200
+        LOGGER.info(
+            "version: basedir: %s, exists?: %s",
+            self.basedir,
+            os.path.exists(os.path.join(self.basedir, "version.json")),
+        )
         resp.text = json.dumps(get_version(self.basedir) or {})
 
 
