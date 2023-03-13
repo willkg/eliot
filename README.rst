@@ -21,3 +21,4 @@ Project details
 * Chat: `#crashreporting matrix channel <https://chat.mozilla.org/#/room/#crashreporting:mozilla.org>`_
 
 
+
