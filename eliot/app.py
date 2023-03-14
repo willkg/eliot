@@ -42,7 +42,7 @@ from eliot.symbolicate_resource import SymbolicateV4, SymbolicateV5
 
 
 LOGGER = logging.getLogger(__name__)
-REPOROOT_DIR = str(Path(__file__).parent.parent.parent)
+REPOROOT_DIR = str(Path(__file__).parent.parent)
 STATICROOT_DIR = str(Path(__file__).parent / "static")
 
 
