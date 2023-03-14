@@ -1,17 +1,17 @@
 ---
-# These environment variables must be set in CircleCI UI
+# We will use circleci mozilla-services context: eliot-circleci-image-push
 #
-# DOCKERHUB_REPO - docker hub repo, format: <username>/<repo>
-# DOCKER_USER    - login info for docker hub
-# DOCKER_PASS
 version: 2.1
+
+# See https://circleci.com/orbs/registry/orb/circleci/gcp-gcr
+orbs:
+  gcp-gcr: circleci/gcp-gcr@0.15.0
+
+
 jobs:
   main:
     docker:
-      - image: cimg/python:3.11.1
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_PASS
+      - image: cimg/base:2022.06
 
     steps:
       - checkout
@@ -25,17 +25,6 @@ jobs:
           command: |
             uname -v
             docker info
-
-      - run:
-          name: Login to Dockerhub
-          # yamllint disable rule:line-length
-          command: |
-            if [ "${DOCKER_USER}" == "" ] || [ "${DOCKER_PASS}" == "" ]; then
-              echo "Skipping Login to Dockerhub, credentials not available."
-            else
-              echo "${DOCKER_PASS}" | docker login -u="${DOCKER_USER}" --password-stdin
-            fi
-          # yamllint enable rule:line-length
 
       - run:
           name: Create version.json
@@ -54,7 +43,7 @@ jobs:
       - run:
           name: Build Docker images
           command: |
-            # build tecken containers
+            # build eliot container
             make build
 
       - run:
@@ -91,3 +80,17 @@ workflows:
           filters:
             tags:
               only: /.*/
+
+  push_eliot_image:
+    jobs:
+      - gcp-gcr/build-and-push-image:
+          name: Build and push image for eliot
+          context: eliot-circleci-image-push
+          registry-url: us-docker.pkg.dev
+          image: eliot-prod/eliot
+          tag: ${CIRCLE_TAG:-latest}
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: main
