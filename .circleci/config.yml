@@ -11,7 +11,7 @@ orbs:
 jobs:
   main:
     docker:
-      - image: cimg/base:2022.06
+      - image: cimg/python:3.11.1
 
     steps:
       - checkout
