@@ -91,6 +91,7 @@ jobs:
 
   publish-registry:
     executor: docker/machine
+    context: eliot-circleci-image-push
     parameters:
       image_tag:
         type: string
