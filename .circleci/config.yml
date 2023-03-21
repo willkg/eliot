@@ -91,7 +91,6 @@ jobs:
 
   publish-registry:
     executor: docker/machine
-    context: eliot-circleci-image-push
     parameters:
       image_tag:
         type: string
@@ -154,7 +153,7 @@ workflows:
             - run:
                 name: Authenticate GAR
                 command: |
-                  echo $GCLOUD_SERVICE_KEY | base64 -d > creds.json
+                  echo $GCLOUD_SERVICE_KEY_ENCODED | base64 -d > creds.json
                   gcloud auth activate-service-account --key-file creds.json
                   gcloud auth configure-docker us-docker.pkg.dev
           requires:
