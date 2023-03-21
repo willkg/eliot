@@ -74,11 +74,15 @@ jobs:
             docker compose run --rm --no-deps test-ci bash make -C docs/ html
 
       - run:
+          name: Tag Image
+          command: |
+            docker tag eliot:build $CIRCLE_PROJECT_REPONAME:${CIRCLE_SHA1:0:9}
+
+      - run:
           name: Persist image
           command: |
             mkdir -p artifacts
-            #docker save -o artifacts/eliot.tar $CIRCLE_PROJECT_REPONAME:${CIRCLE_SHA1:0:9}
-            docker save -o artifacts/eliot.tar eliot:build
+            docker save -o artifacts/eliot.tar $CIRCLE_PROJECT_REPONAME:${CIRCLE_SHA1:0:9}
 
       - persist_to_workspace:
           root: artifacts
