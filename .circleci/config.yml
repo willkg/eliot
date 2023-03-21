@@ -2,7 +2,8 @@
 # We will use circleci mozilla-services context: eliot-circleci-image-push
 #
 version: 2.1
-
+orbs:
+  docker: circleci/docker@2.2.0
 
 jobs:
   build-and-test:
@@ -129,8 +130,8 @@ workflows:
           filters:
             tags:
               only: /.*/
-            #branches:
-            #  ignore: main
+            branches:
+              only: main
 
   publish:
     jobs:
