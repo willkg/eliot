@@ -28,7 +28,7 @@ import traceback
 
 from boltons.dictutils import OneToOne
 import click
-from everett.manager import get_config_for_class, Option
+from everett.manager import get_config_for_class, Option, parse_data_size
 from fillmore.libsentry import set_up_sentry
 from fillmore.scrubber import Scrubber, SCRUB_RULES_DEFAULT
 from inotify_simple import INotify, flags
@@ -120,11 +120,11 @@ class DiskCacheManager:
             doc="Location for caching symcache files.",
         )
         symbols_cache_max_size = Option(
-            default=str(1024 * 1024 * 1024),
-            parser=int,
+            default="1gb",
+            parser=parse_data_size,
             doc=(
                 "Max size (bytes) of symbols cache. You can use _ to group digits for "
-                "legibility."
+                "legibility. You can use units like kb, mb, gb, and tb."
             ),
         )
 

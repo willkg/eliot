@@ -121,7 +121,7 @@ def test_addfiles(cm_client, tmpdir):
     cm_client.rebuild(
         {
             "ELIOT_SYMBOLS_CACHE_DIR": str(tmpdir),
-            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": 10,
+            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": "10",
         }
     )
 
@@ -154,7 +154,7 @@ def test_eviction_when_too_big(cm_client, tmpdir):
     cm_client.rebuild(
         {
             "ELIOT_SYMBOLS_CACHE_DIR": str(cachedir),
-            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": 10,
+            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": "10",
         }
     )
 
@@ -202,7 +202,7 @@ def test_eviction_of_least_recently_used(cm_client, tmpdir):
     cm_client.rebuild(
         {
             "ELIOT_SYMBOLS_CACHE_DIR": str(cachedir),
-            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": 10,
+            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": "10",
         }
     )
 
@@ -254,7 +254,7 @@ def test_add_file(cm_client, tmpdir):
     cm_client.rebuild(
         {
             "ELIOT_SYMBOLS_CACHE_DIR": str(cachedir),
-            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": 10,
+            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": "10",
         }
     )
 
@@ -275,7 +275,7 @@ def test_delete_file(cm_client, tmpdir):
     cm_client.rebuild(
         {
             "ELIOT_SYMBOLS_CACHE_DIR": str(cachedir),
-            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": 10,
+            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": "10",
         }
     )
 
@@ -299,7 +299,7 @@ def test_moved_to(cm_client, tmpdir):
     cm_client.rebuild(
         {
             "ELIOT_SYMBOLS_CACHE_DIR": str(cachedir),
-            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": 10,
+            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": "10",
         }
     )
 
@@ -343,7 +343,7 @@ def test_moved_from(cm_client, tmpdir):
     cm_client.rebuild(
         {
             "ELIOT_SYMBOLS_CACHE_DIR": str(cachedir),
-            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": 10,
+            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": "10",
         }
     )
 
@@ -373,7 +373,7 @@ def test_nested_directories(cm_client, tmpdir):
     cm_client.rebuild(
         {
             "ELIOT_SYMBOLS_CACHE_DIR": str(cachedir),
-            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": 10,
+            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": "10",
         }
     )
 
@@ -534,7 +534,7 @@ def test_sentry_scrubbing(sentry_helper, cm_client, monkeypatch, tmpdir):
     cm_client.rebuild(
         {
             "ELIOT_SYMBOLS_CACHE_DIR": str(cachedir),
-            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": 10,
+            "ELIOT_SYMBOLS_CACHE_MAX_SIZE": "10",
         }
     )
     cm = cm_client.cache_manager
