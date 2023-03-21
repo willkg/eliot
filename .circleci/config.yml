@@ -175,17 +175,3 @@ workflows:
           filters:
             branches:
               only: main
-
-      #- gcp-gcr/push-image:
-      #    name: Push image for eliot
-      #    requires:
-      #      - build_and_test
-      #    context: eliot-circleci-image-push
-      #    registry-url: us-docker.pkg.dev
-      #    image: eliot-prod/eliot
-      #    tag: ${CIRCLE_TAG:-latest}
-      #    filters:
-      #      tags:
-      #        only: /.*/
-      #      branches:
-      #        only: main
