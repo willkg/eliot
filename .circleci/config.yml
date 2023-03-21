@@ -3,10 +3,6 @@
 #
 version: 2.1
 
-# See https://circleci.com/orbs/registry/orb/circleci/gcp-gcr
-orbs:
-  docker: circleci/docker@2.2.0
-
 
 jobs:
   build-and-test:
@@ -80,7 +76,8 @@ jobs:
           name: Persist image
           command: |
             mkdir -p artifacts
-            docker save -o artifacts/eliot.tar $CIRCLE_PROJECT_REPONAME:${CIRCLE_SHA1:0:9}
+            #docker save -o artifacts/eliot.tar $CIRCLE_PROJECT_REPONAME:${CIRCLE_SHA1:0:9}
+            docker save -o artifacts/eliot.tar eliot:build
 
       - persist_to_workspace:
           root: artifacts
