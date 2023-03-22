@@ -133,7 +133,7 @@ workflows:
       - build-and-test:
           filters:
             tags:
-              only: /.*/
+              ignore: /^v.*/
             branches:
               ignore: main
 
@@ -143,7 +143,7 @@ workflows:
           name: build-and-test-tag
           filters:
             tags:
-              only: /.*/
+              only: /^v.*/
             branches:
               ignore: /.*/
               
