@@ -144,6 +144,11 @@ workflows:
             tags:
               only: /.*/
             branches:
+              ignore: /.*/
+              
+      - build-and-test:
+          filters:
+            branches:
               only: main
 
       - publish-registry:
