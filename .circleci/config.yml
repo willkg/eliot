@@ -140,6 +140,7 @@ workflows:
   publish:
     jobs:
       - build-and-test:
+          name: build-and-test-tag
           filters:
             tags:
               only: /.*/
@@ -147,6 +148,7 @@ workflows:
               ignore: /.*/
               
       - build-and-test:
+          name: build-and-test-main-commit
           filters:
             branches:
               only: main
@@ -164,7 +166,7 @@ workflows:
                   gcloud auth activate-service-account --key-file creds.json
                   gcloud auth configure-docker us-docker.pkg.dev
           requires:
-            - build-and-test
+            - build-and-test-tag
           filters:
             tags:
               only: /.*/
@@ -178,7 +180,7 @@ workflows:
           image_tag: latest
           registry_authentication: *gar-auth
           requires:
-            - build-and-test
+            - build-and-test-main-commit
           filters:
             branches:
               only: main
