@@ -134,6 +134,8 @@ workflows:
           filters:
             tags:
               only: /.*/
+            branches:
+              ignore: main
 
   publish:
     jobs:
