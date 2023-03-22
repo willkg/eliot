@@ -50,15 +50,6 @@ Gunicorn configuration:
    <https://github.com/mozilla-services/eliot/blob/main/bin/run_eliot_web.sh>`_.
 
 
-.. everett:option:: ELIOT_GUNICORN_CMD_PREFIX
-   :default: ""
-
-   Specifies a command prefix to run the gunicorn process in.
-
-   Used in `bin/run_eliot_web.sh
-   <https://github.com/mozilla-services/eliot/blob/main/bin/run_eliot_web.sh>`_.
-
-
 Webapp configuration:
 
 .. autocomponentconfig:: eliot.app.EliotApp
