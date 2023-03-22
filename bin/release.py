@@ -13,7 +13,7 @@ both.
 This requires Python 3 to run.
 
 repo: https://github.com/willkg/socorro-release/
-sha: 3c700df4f8ab3e49b748879e383159677b387879
+sha: 3c700df4f8ab3e49b748879e383159677b387879+1
 
 """
 
@@ -50,6 +50,9 @@ DEFAULT_CONFIG = {
 }
 
 LINE = "=" * 80
+
+# Format for the tag using datetime strftime placeholders
+TAG_FORMAT = "v%Y.%m.%d"
 
 
 def get_config():
@@ -327,7 +330,7 @@ def run():
     if args.cmd == "make-tag" and args.tag:
         tag_name = args.tag
     else:
-        tag_name = datetime.datetime.now().strftime("%Y.%m.%d")
+        tag_name = datetime.datetime.now().strftime(TAG_FORMAT)
 
     # If it's already taken, append a -N
     existing_tags = check_output(f'git tag -l "{tag_name}*"').splitlines()
