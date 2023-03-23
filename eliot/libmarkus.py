@@ -11,6 +11,7 @@ import logging
 
 import markus
 from markus.main import MetricsFilter
+from markus.filters import AddTagFilter
 
 
 _IS_MARKUS_SETUP = False
@@ -177,12 +178,13 @@ ELIOT_METRICS = {
 }
 
 
-def setup_metrics(statsd_host, statsd_port, statsd_namespace, debug=False):
+def setup_metrics(statsd_host, statsd_port, statsd_namespace, hostname, debug=False):
     """Initialize and configures the metrics system.
 
     :arg statsd_host: the statsd host to send metrics to
     :arg statsd_port: the port on the host to send metrics to
     :arg statsd_namespace: the namespace (if any) for these metrics
+    :arg hostname: the host name
     :arg debug: whether or not to additionally log metrics to the logger
 
     """
@@ -217,6 +219,11 @@ def setup_metrics(statsd_host, statsd_port, statsd_namespace, debug=False):
         # raise exceptions when metrics are used incorrectly.
         metrics_filter = RegisteredMetricsFilter(metrics=ELIOT_METRICS)
         METRICS.filters.append(metrics_filter)
+
+    if hostname:
+        # Add host tag to all metrics if the hostname is set
+        # FIXME(willkg): do we need to cleanse the hostname?
+        METRICS.filters.append(AddTagFilter(f"host:{hostname}"))
 
     _IS_MARKUS_SETUP = True
 

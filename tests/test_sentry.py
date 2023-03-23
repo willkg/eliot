@@ -184,5 +184,5 @@ def test_count_sentry_scrub_error():
         metricsmock.clear_records()
         count_sentry_scrub_error("foo")
         metricsmock.assert_incr(
-            "eliot.sentry_scrub_error", value=1, tags=["service:webapp"]
+            "eliot.sentry_scrub_error", value=1, tags=["service:webapp", "host:testnode"]
         )
