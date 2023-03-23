@@ -183,6 +183,7 @@ class EliotApp(falcon.App):
             statsd_host=self.config("statsd_host"),
             statsd_port=self.config("statsd_port"),
             statsd_namespace=self.config("statsd_namespace"),
+            hostname=self.config("hostname"),
             debug=self.config("local_dev_env"),
         )
 

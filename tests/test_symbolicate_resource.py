@@ -296,7 +296,7 @@ class TestSymbolicateBase:
             ]
             mm.assert_incr(
                 "eliot.symbolicate.parse_sym_file.error",
-                tags=["reason:sym_debug_id_lookup_error"],
+                tags=["reason:sym_debug_id_lookup_error", "host:testnode"],
             )
 
     def test_parse_sym_file_debugids(self, caplog, metricsmock, tmpdir):
@@ -315,7 +315,7 @@ class TestSymbolicateBase:
                 ("eliot.symbolicate_resource", 40, "debug_id parse error: 'abcde'")
             ]
             mm.assert_incr(
-                "eliot.symbolicate.parse_sym_file.error", tags=["reason:bad_debug_id"]
+                "eliot.symbolicate.parse_sym_file.error", tags=["reason:bad_debug_id", "host:testnode"]
             )
 
     def test_get_symcache_in_cache(self, tmpcachedir, tmpdir):
@@ -647,7 +647,7 @@ class TestSymbolicateV4:
             # Assert the request was not proxied
             mm.assert_incr(
                 "eliot.symbolicate.proxied",
-                tags=["proxied:0"],
+                tags=["proxied:0", "host:testnode"],
             )
 
     def test_symbolication_proxied(self, requestsmock, metricsmock, client):
@@ -676,7 +676,7 @@ class TestSymbolicateV4:
             # Assert the request was proxied
             mm.assert_incr(
                 "eliot.symbolicate.proxied",
-                tags=["proxied:1"],
+                tags=["proxied:1", "host:testnode"],
             )
 
 
@@ -989,7 +989,7 @@ class TestSymbolicateV5:
             # Assert the request was proxied
             mm.assert_incr(
                 "eliot.symbolicate.proxied",
-                tags=["proxied:0"],
+                tags=["proxied:0", "host:testnode"],
             )
 
     def test_symbolication_proxied(self, requestsmock, metricsmock, client):
@@ -1022,5 +1022,5 @@ class TestSymbolicateV5:
             # Assert the request was proxied
             mm.assert_incr(
                 "eliot.symbolicate.proxied",
-                tags=["proxied:1"],
+                tags=["proxied:1", "host:testnode"],
             )
