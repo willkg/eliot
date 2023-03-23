@@ -471,7 +471,6 @@ BROKEN_EVENT = {
     "logger": "eliot.cache_manager",
     "logentry": {"message": "Exception thrown while handling events.", "params": []},
     "extra": {
-        "host_id": "testcode",
         "processname": "tests",
         "asctime": ANY,
         "sys.argv": ANY,

@@ -9,6 +9,7 @@ Holds the EliotApp code. EliotApp is a WSGI app implemented using Falcon.
 import logging
 import logging.config
 from pathlib import Path
+import socket
 import sys
 
 from everett.manager import (
@@ -69,7 +70,7 @@ def configure_sentry(app_config):
     set_up_sentry(
         sentry_dsn=app_config("secret_sentry_dsn"),
         release=get_release_name(REPOROOT_DIR),
-        host_id=app_config("host_id"),
+        host_id=app_config("hostname"),
         before_send=scrubber,
     )
 
@@ -114,16 +115,13 @@ class EliotApp(falcon.App):
             doc="Whether or not this is a local development environment.",
             alternate_keys=["root:local_dev_env"],
         )
-        host_id = Option(
-            default="",
+        hostname = Option(
+            default=str(socket.gethostname()),
             doc=(
-                "Identifier for the host that is running Eliot. This identifies "
-                "this Eliot instance in the logs and makes it easier to correlate "
-                "Eliot logs with other data. For example, the value could be a "
-                "public hostname, an instance id, or something like that. If you do not "
-                "set this, then socket.gethostname() is used instead."
+                "Unique identifier for the host that is running Eliot. This is used "
+                "in logging and metrics. The default is socket.gethostname()."
             ),
-            alternate_keys=["root:host_id"],
+            alternate_keys=["root:hostname"],
         )
         logging_level = Option(
             default="INFO",
@@ -303,7 +301,6 @@ def get_app(config_manager=None):
     setup_logging(
         logging_level=app_config("logging_level"),
         debug=app_config("local_dev_env"),
-        host_id=app_config("host_id"),
         processname="webapp",
     )
 

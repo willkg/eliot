@@ -8,7 +8,6 @@ Utilities for logging configuration and usage.
 
 import logging
 import logging.config
-import socket
 
 from everett.manager import get_runtime_config, generate_uppercase_key
 
@@ -16,14 +15,13 @@ from everett.manager import get_runtime_config, generate_uppercase_key
 _IS_LOGGING_SETUP = False
 
 
-def setup_logging(logging_level, debug=False, host_id=None, processname=None):
+def setup_logging(logging_level, debug=False, processname=None):
     """Initialize Python logging configuration.
 
     Note: This only sets up logging once per process. Additional calls will get ignored.
 
     :arg logging_level: the level to log at
     :arg debug: whether or not to log to the console in an easier-to-read fashion
-    :arg host_id: the host id to log
     :arg processname: the process name to log
 
     """
@@ -31,13 +29,7 @@ def setup_logging(logging_level, debug=False, host_id=None, processname=None):
     if _IS_LOGGING_SETUP:
         return
 
-    host_id = host_id or socket.gethostname()
     processname = processname or "main"
-
-    class AddHostID(logging.Filter):
-        def filter(self, record):
-            record.host_id = host_id
-            return True
 
     class AddProcessName(logging.Filter):
         def filter(self, record):
@@ -48,7 +40,6 @@ def setup_logging(logging_level, debug=False, host_id=None, processname=None):
         "version": 1,
         "disable_existing_loggers": True,
         "filters": {
-            "add_hostid": {"()": AddHostID},
             "add_processname": {"()": AddProcessName},
         },
         "formatters": {
@@ -65,13 +56,13 @@ def setup_logging(logging_level, debug=False, host_id=None, processname=None):
                 "level": logging.DEBUG,
                 "class": "logging.StreamHandler",
                 "formatter": "app",
-                "filters": ["add_hostid", "add_processname"],
+                "filters": ["add_processname"],
             },
             "mozlog": {
                 "level": logging.DEBUG,
                 "class": "logging.StreamHandler",
                 "formatter": "mozlog",
-                "filters": ["add_hostid", "add_processname"],
+                "filters": ["add_processname"],
             },
         },
         "loggers": {

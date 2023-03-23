@@ -20,7 +20,7 @@ BROKEN_EVENT = {
         "values": [
             {
                 "category": "markus",
-                "data": {"asctime": ANY, "host_id": "testcode", "processname": "tests"},
+                "data": {"asctime": ANY, "processname": "tests"},
                 "level": "info",
                 "message": ANY,
                 "timestamp": ANY,
