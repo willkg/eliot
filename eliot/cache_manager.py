@@ -23,6 +23,7 @@ from collections import OrderedDict
 import logging
 import os
 import pathlib
+import socket
 import sys
 import traceback
 
@@ -89,16 +90,13 @@ class DiskCacheManager:
             doc="Whether or not this is a local development environment.",
             alternate_keys=["root:local_dev_env"],
         )
-        host_id = Option(
-            default="",
+        hostname = Option(
+            default=str(socket.gethostname()),
             doc=(
-                "Identifier for the host that is running Eliot. This identifies "
-                "this Eliot instance in the logs and makes it easier to correlate "
-                "Eliot logs with other data. For example, the value could be a "
-                "public hostname, an instance id, or something like that. If you do not "
-                "set this, then socket.gethostname() is used instead."
+                "Unique identifier for the host that is running Eliot. This is used "
+                "in logging and metrics. The default is socket.gethostname()."
             ),
-            alternate_keys=["root:host_id"],
+            alternate_keys=["root:hostname"],
         )
         logging_level = Option(
             default="INFO",
@@ -158,7 +156,6 @@ class DiskCacheManager:
         setup_logging(
             logging_level=self.config("logging_level"),
             debug=self.config("local_dev_env"),
-            host_id=self.config("host_id"),
             processname="cache_manager",
         )
         setup_metrics(
@@ -175,7 +172,7 @@ class DiskCacheManager:
         set_up_sentry(
             sentry_dsn=self.config("secret_sentry_dsn"),
             release=get_release_name(REPOROOT_DIR),
-            host_id=self.config("host_id"),
+            host_id=self.config("hostname"),
             before_send=scrubber,
         )
 

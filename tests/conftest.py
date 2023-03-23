@@ -38,7 +38,6 @@ def pytest_collection_finish(session):
     setup_logging(
         logging_level="DEBUG",
         debug=True,
-        host_id="testcode",
         processname="tests",
     )
     markus.configure([{"class": "markus.backends.logging.LoggingMetrics"}])
@@ -105,7 +104,7 @@ def client():
 
         def test_foo(client, tmpdir):
             client.rebuild_app({
-                "HOST_ID": "foo"
+                "HOSTNAME": "foo"
             })
 
     """
