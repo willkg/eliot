@@ -2,8 +2,10 @@
 Mozilla Symbolication Service (aka Eliot)
 =========================================
 
-Mozilla Symbolication Services implements a symbolication API for converting
+Mozilla Symbolication Service implements a symbolication API for converting
 memory addresses into symbols.
+
+It uses symbols from `Mozilla Symbols Server <https://symbols.mozilla.org/>`__.
 
 
 Project details
@@ -17,8 +19,5 @@ Project details
 * Code: https://github.com/mozilla-services/eliot
 * Documentation: `<https://mozilla-eliot.readthedocs.io/>`_
 * Community Participation Guidelines: `<https://github.com/mozilla-services/eliot/blob/main/CODE_OF_CONDUCT.md>`_
-* Bugs: `Report a Tecken bug <https://bugzilla.mozilla.org/enter_bug.cgi?format=__standard__&product=Eliot>`_
+* Bugs: `Report an Eliot bug <https://bugzilla.mozilla.org/enter_bug.cgi?format=__standard__&product=Eliot>`_
 * Chat: `#crashreporting matrix channel <https://chat.mozilla.org/#/room/#crashreporting:mozilla.org>`_
-
-
-
