@@ -156,7 +156,7 @@ class DiskCacheManager:
         setup_logging(
             logging_level=self.config("logging_level"),
             debug=self.config("local_dev_env"),
-            processname="cache_manager",
+            processname="disk_manager",
         )
         setup_metrics(
             statsd_host=self.config("statsd_host"),
