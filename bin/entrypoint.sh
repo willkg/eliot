@@ -21,7 +21,7 @@ shift
 
 case ${SERVICE} in
 eliot)  ## Run Eliot service
-    exec honcho -f /app/Procfile start
+    exec honcho -f /app/Procfile --no-prefix start
     ;;
 bash)  ## Open a bash shell or run something else
     if [ -z "$*" ]; then
