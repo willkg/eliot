@@ -18,7 +18,7 @@ RUN groupadd --gid $groupid app && \
 
 # install a few essentials and clean apt caches afterwards
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends apt-transport-https build-essential curl git libpq-dev gettext libffi-dev && \
+    apt-get install -y --no-install-recommends apt-transport-https build-essential curl git libpq-dev gettext libffi-dev tcpdump && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
