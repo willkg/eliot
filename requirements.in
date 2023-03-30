@@ -11,7 +11,7 @@ gunicorn==20.1.0
 honcho==1.1.0
 inotify_simple==1.3.5
 jsonschema==4.17.3
-markus[datadog]==4.1.0
+markus[datadog]==4.2.0
 msgpack==1.0.5
 pip-tools==6.12.3
 pytest==7.2.2
@@ -24,6 +24,3 @@ sphinx-rtd-theme==1.0.0
 symbolic==10.2.1
 urllib3==1.26.14
 werkzeug==2.2.3
-
-# bug 1825133: downgrade so it doesn't emit container id
-datadog==0.44.0
