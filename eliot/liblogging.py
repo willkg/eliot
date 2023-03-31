@@ -100,4 +100,4 @@ def log_config(logger, config_manager, component):
             value = "*****"
 
         full_key = generate_uppercase_key(key, ns).upper()
-        logger.debug(f"{full_key}={value}")
+        logger.info(f"{full_key}={value}")
