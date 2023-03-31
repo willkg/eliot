@@ -7,7 +7,7 @@
 # Sends a stack for symbolication with a Symbols server using the symbolicate service
 # API.
 
-# Usage: ./bin/symbolicate.py FILE
+# Usage: ./bin/symbolicate.py CMD FILE
 
 import json
 import os
@@ -29,8 +29,13 @@ class RequestError(Exception):
     pass
 
 
-def request_stack(url, payload, api_version, is_debug):
+def request_stack(url, payload, is_debug):
     headers = {"User-Agent": "eliot-symbolicate"}
+
+    if "v4" in url:
+        api_version = 4
+    else:
+        api_version = 5
 
     if api_version == 4:
         # We have to add the version to the payload, so parse it, add it, and then
@@ -78,17 +83,11 @@ def symbolicate_group():
     help="The API url to use.",
 )
 @click.option(
-    "--api-version",
-    default=5,
-    type=int,
-    help="The API version to use; 4 or 5; defaults to 5.",
-)
-@click.option(
     "--debug/--no-debug", default=False, help="Whether to include debug info."
 )
 @click.argument("stackfile", required=False)
 @click.pass_context
-def print_stack(ctx, api_url, api_version, debug, stackfile):
+def print_stack(ctx, api_url, debug, stackfile):
     if not stackfile and not sys.stdin.isatty():
         data = click.get_text_stream("stdin").read()
 
@@ -104,21 +103,13 @@ def print_stack(ctx, api_url, api_version, debug, stackfile):
         with open(stackfile) as fp:
             data = fp.read()
 
-    if api_version not in [4, 5]:
-        raise click.BadParameter(
-            "Not a valid API version number. Must be 4 or 5.",
-            ctx=ctx,
-            param="api_version",
-            param_hint="api_version",
-        )
-
     try:
         payload = json.loads(data)
     except json.decoder.JSONDecodeError as jde:
         click.echo(f"Error: request is not valid JSON: {jde!r}\n{data!r}")
         return
 
-    response_data = request_stack(api_url, payload, api_version, debug)
+    response_data = request_stack(api_url, payload, debug)
     if debug:
         click.echo(json.dumps(response_data, indent=2))
     else:
@@ -131,15 +122,9 @@ def print_stack(ctx, api_url, api_version, debug, stackfile):
     default="https://symbolication.services.mozilla.com/symbolicate/v5",
     help="The API url to use.",
 )
-@click.option(
-    "--api-version",
-    default=5,
-    type=int,
-    help="The API version to use; 4 or 5; defaults to 5.",
-)
 @click.argument("stackfile", required=False)
 @click.pass_context
-def verify_symbolication(ctx, api_url, api_version, stackfile):
+def verify_symbolication(ctx, api_url, stackfile):
     if not stackfile and not sys.stdin.isatty():
         data = click.get_text_stream("stdin").read()
 
@@ -155,21 +140,18 @@ def verify_symbolication(ctx, api_url, api_version, stackfile):
         with open(stackfile) as fp:
             data = fp.read()
 
-    if api_version not in [4, 5]:
-        raise click.BadParameter(
-            "Not a valid API version number. Must be 4 or 5.",
-            ctx=ctx,
-            param="api_version",
-            param_hint="api_version",
-        )
-
     if stackfile:
         click.echo(click.style(f"Working on stackfile {stackfile} ...", fg="yellow"))
     else:
         click.echo(click.style("Working on stdin ...", fg="yellow"))
 
+    if "v4" in api_url:
+        api_version = 4
+    else:
+        api_version = 5
+
     payload = json.loads(data)
-    response_data = request_stack(api_url, payload, api_version, is_debug=True)
+    response_data = request_stack(api_url, payload, is_debug=True)
 
     path = os.path.abspath(f"/app/schemas/symbolicate_api_response_v{api_version}.json")
     schema = load_schema(path)
@@ -182,6 +164,98 @@ def verify_symbolication(ctx, api_url, api_version, stackfile):
             click.style(f"Response is invalid v{api_version}! {exc!r}", fg="red")
         )
         ctx.exit(1)
+
+
+@symbolicate_group.command("compare")
+@click.argument("url1")
+@click.argument("url2")
+@click.argument("stackfile", required=False)
+@click.pass_context
+def compare_symbolication(ctx, url1, url2, stackfile):
+    if not stackfile and not sys.stdin.isatty():
+        data = click.get_text_stream("stdin").read()
+
+    else:
+        if not os.path.exists(stackfile):
+            raise click.BadParameter(
+                "Stack file does not exist.",
+                ctx=ctx,
+                param="stackfile",
+                param_hint="stackfile",
+            )
+
+        with open(stackfile) as fp:
+            data = fp.read()
+
+    if stackfile:
+        click.echo(click.style(f"Working on stackfile {stackfile} ...", fg="yellow"))
+    else:
+        click.echo(click.style("Working on stdin ...", fg="yellow"))
+
+    if "v4" in url1:
+        url1_version = 4
+    else:
+        url1_version = 5
+
+    if "v4" in url2:
+        url2_version = 4
+    else:
+        url2_version = 5
+
+    if url1_version != url2_version:
+        click.echo(
+            click.style(f"{url1} and {url2} are different api versions.", fg="red")
+        )
+        ctx.exit(1)
+
+    api_version = url1_version
+
+    payload = json.loads(data)
+
+    click.echo(click.style(f"Downloading from {url1} ...", fg="yellow"))
+    url1_resp = request_stack(url1, payload, is_debug=True)
+    click.echo(click.style(f"Downloading from {url2} ...", fg="yellow"))
+    url2_resp = request_stack(url2, payload, is_debug=True)
+
+    path = os.path.abspath(f"/app/schemas/symbolicate_api_response_v{api_version}.json")
+    schema = load_schema(path)
+    try:
+        jsonschema.validate(url1_resp, schema)
+        click.echo(
+            click.style(f"Response from {url1} is valid v{api_version}!", fg="green")
+        )
+    except jsonschema.exceptions.ValidationError as exc:
+        click.echo(json.dumps(url1_resp, indent=2))
+        click.echo(
+            click.style(
+                f"Response from {url1} is invalid v{api_version}! {exc!r}", fg="red"
+            )
+        )
+        ctx.exit(1)
+
+    try:
+        jsonschema.validate(url2_resp, schema)
+        click.echo(
+            click.style(f"Response from {url2} is valid v{api_version}!", fg="green")
+        )
+    except jsonschema.exceptions.ValidationError as exc:
+        click.echo(json.dumps(url1_resp, indent=2))
+        click.echo(
+            click.style(
+                f"Response from {url1} is invalid v{api_version}! {exc!r}", fg="red"
+            )
+        )
+        ctx.exit(1)
+
+    url1_debug = url1_resp.pop("debug", {})
+    url2_debug = url2_resp.pop("debug", {})
+    if url1_resp != url2_resp:
+        click.echo(click.style("url1 resp and url2 resp differ", fg="red"))
+        # FIXME: show differences
+        ctx.exit(1)
+
+    click.echo(url1_debug)
+    click.echo(url2_debug)
 
 
 if __name__ == "__main__":
