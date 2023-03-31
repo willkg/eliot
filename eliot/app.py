@@ -314,7 +314,7 @@ def get_app(config_manager=None):
     app.verify()
 
     if app.config("local_dev_env"):
-        LOGGER.info("Eliot is running! http://localhost:8050")
+        LOGGER.info("Eliot is running! http://localhost:8000")
 
     # Wrap app in Sentry WSGI middleware which builds the request section in the
     # Sentry event
