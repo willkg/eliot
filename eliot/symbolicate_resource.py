@@ -79,6 +79,9 @@ class DebugStats:
             ptr = ptr[part]
         return ptr
 
+    def get(self, key):
+        return self._getvalue(self.data, key, default=0)
+
     def set(self, key, value):
         self._setvalue(self.data, key, value)
 
@@ -655,9 +658,10 @@ class SymbolicateV5(SymbolicateBase):
             results = self.symbolicate(jobs, debug_stats)
         response = {"results": results}
 
-        # Add debug information if requested
+        # Add debug information to response if requested
         if is_debug:
             all_modules = Counter()
+
             # Calculate modules
             for result in results:
                 all_modules.update(
@@ -667,13 +671,11 @@ class SymbolicateV5(SymbolicateBase):
                         if val is not None
                     ]
                 )
-            debug_stats.set(
-                "modules.count", value=sum([val for key, val in all_modules.items()])
-            )
+            debug_stats.set("modules.count", value=sum(all_modules.values()))
             for key, count in all_modules.items():
                 debug_stats.set(["modules", "stacks_per_module", key], count)
 
-            # Add 0 values if we need them
+            # Set values to 0 if they're missing by incrementing them by 0
             debug_stats.incr("cache_lookups.count", 0)
             debug_stats.incr("cache_lookups.time", 0)
             debug_stats.incr("downloads.count", 0)
@@ -682,4 +684,14 @@ class SymbolicateV5(SymbolicateBase):
 
             response["debug"] = debug_stats.data
 
+        num_jobs = len(jobs)
+        num_symbols = sum(
+            [sum([len(stack) for stack in job["stacks"]]) for job in jobs]
+        )
+        LOGGER.info(
+            "symbolicate/v5: jobs: %s, symbols: %s, time: %s",
+            num_jobs,
+            num_symbols,
+            debug_stats.get("time"),
+        )
         resp.text = json.dumps(response)
