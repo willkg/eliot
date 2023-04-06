@@ -1,0 +1,7 @@
+[tool.release]
+github_user = "mozilla-services"
+github_project = "eliot"
+# bugzilla_product = "Eliot"
+# bugzilla_component = "General"
+main_branch = "main"
+tag_name_template = "v%Y.%m.%d"
