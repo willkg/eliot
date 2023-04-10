@@ -315,7 +315,8 @@ class TestSymbolicateBase:
                 ("eliot.symbolicate_resource", 40, "debug_id parse error: 'abcde'")
             ]
             mm.assert_incr(
-                "eliot.symbolicate.parse_sym_file.error", tags=["reason:bad_debug_id", "host:testnode"]
+                "eliot.symbolicate.parse_sym_file.error",
+                tags=["reason:bad_debug_id", "host:testnode"],
             )
 
     def test_get_symcache_in_cache(self, tmpcachedir, tmpdir):
