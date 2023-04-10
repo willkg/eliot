@@ -1,3 +1,54 @@
+[tool.ruff]
+# Enable pycodestyle (`E`), Pyflakes (`F`), and Bugbear (`B`) codes by default.
+select = ["E", "F", "B"]
+ignore = ["E501"]
+
+unfixable = ["B"]
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".tox",
+    ".venv",
+    "__pycache__",
+    "__pypackages__",
+    "_build",
+    "node_modules",
+    "venv",
+]
+per-file-ignores = {}
+
+# Same as Black.
+line-length = 88
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# Assume Python 3.9.
+target-version = "py39"
+
+
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+
+
+[tool.pytest.ini_options]
+norecursedirs = [".cache", "__pycache__"]
+testpaths = "tests/"
+addopts = "-rsxX --showlocals --tb=native -p no:cacheprovider --import-mode=importlib"
+
+# Transform all warnings into errors
+filterwarnings = [
+    "error",
+    # sentry-sdk has a Falcon integration that needs some help and is currently
+    # using a thing in Falcon that kicks up a DeprecatedWarning
+    "ignore:The api_helpers module.*:falcon.util.deprecation.DeprecatedWarning",
+]
+
+
 [tool.release]
 github_user = "mozilla-services"
 github_project = "eliot"
