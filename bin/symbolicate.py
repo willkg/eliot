@@ -53,8 +53,8 @@ def request_stack(url, payload, is_debug):
     resp = requests.post(url, headers=headers, json=payload, **options)
     if is_debug:
         click.echo(click.style(f"Response: {resp.status_code} {resp.reason}"))
-        for key, val in resp.headers.items():
-            click.echo(click.style(f"{key}: {val}"))
+        for key, val in sorted(resp.headers.items()):
+            click.echo(click.style(f"< {key}: {val}"))
 
     if resp.status_code != 200:
         # The server returned something "bad", so print out the things that
@@ -209,16 +209,17 @@ def compare_symbolication(ctx, url1, url2, stackfile):
         ctx.exit(1)
 
     api_version = url1_version
-
+    click.echo(click.style(f"Using api version {api_version}", fg="yellow"))
     payload = json.loads(data)
-
-    click.echo(click.style(f"Downloading from {url1} ...", fg="yellow"))
-    url1_resp = request_stack(url1, payload, is_debug=True)
-    click.echo(click.style(f"Downloading from {url2} ...", fg="yellow"))
-    url2_resp = request_stack(url2, payload, is_debug=True)
-
     path = os.path.abspath(f"/app/schemas/symbolicate_api_response_v{api_version}.json")
     schema = load_schema(path)
+
+    # Download from url1
+    click.echo(click.style(f"Downloading from {url1} ...", fg="yellow"))
+    url1_resp = request_stack(url1, payload, is_debug=True)
+    url1_debug = url1_resp.pop("debug", {})
+
+    # Validate url1 response
     try:
         jsonschema.validate(url1_resp, schema)
         click.echo(
@@ -231,8 +232,29 @@ def compare_symbolication(ctx, url1, url2, stackfile):
                 f"Response from {url1} is invalid v{api_version}! {exc!r}", fg="red"
             )
         )
-        ctx.exit(1)
 
+    # Print url1 stats
+    click.echo(url1_debug)
+    t = url1_debug.get("time", 0.0)
+    click.echo(click.style(f"Time: {t:,.3}s", fg="yellow"))
+    ct = float(url1_debug.get("cache_lookups", {}).get("time", 0))
+    click.echo(click.style(f"Cache lookup time: {ct:,.3}s", fg="yellow"))
+    dt = float(
+        sum(
+            val
+            for val in url1_debug.get("downloads", {})
+            .get("time_per_module", {})
+            .values()
+        )
+    )
+    click.echo(click.style(f"Download time: {dt:,.3}s", fg="yellow"))
+
+    # Download from url2
+    click.echo(click.style(f"Downloading from {url2} ...", fg="yellow"))
+    url2_resp = request_stack(url2, payload, is_debug=True)
+    url2_debug = url2_resp.pop("debug", {})
+
+    # Validate url2 response
     try:
         jsonschema.validate(url2_resp, schema)
         click.echo(
@@ -245,17 +267,28 @@ def compare_symbolication(ctx, url1, url2, stackfile):
                 f"Response from {url1} is invalid v{api_version}! {exc!r}", fg="red"
             )
         )
-        ctx.exit(1)
 
-    url1_debug = url1_resp.pop("debug", {})
-    url2_debug = url2_resp.pop("debug", {})
-    if url1_resp != url2_resp:
+    click.echo(url2_debug)
+    t = url2_debug.get("time", 0.0)
+    click.echo(click.style(f"Time: {t:,.3}s", fg="yellow"))
+    ct = float(url2_debug.get("cache_lookups", {}).get("time", 0))
+    click.echo(click.style(f"Cache lookup time: {ct:,.3}s", fg="yellow"))
+    dt = float(
+        sum(
+            val
+            for val in url2_debug.get("downloads", {})
+            .get("time_per_module", {})
+            .values()
+        )
+    )
+    click.echo(click.style(f"Download time: {dt:,.3}s", fg="yellow"))
+
+    if url1_resp == url2_resp:
+        click.echo(click.style("url1 resp == url2 resp", fg="green"))
+    else:
         click.echo(click.style("url1 resp and url2 resp differ", fg="red"))
         # FIXME: show differences
         ctx.exit(1)
-
-    click.echo(url1_debug)
-    click.echo(url2_debug)
 
 
 if __name__ == "__main__":
