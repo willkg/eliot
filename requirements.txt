@@ -129,7 +129,9 @@ click==8.1.3 \
 datadog==0.45.0 \
     --hash=sha256:144fce48bda79484b102349f159c4ea4c7cd35361f9e0d031ddf931a922a38a4 \
     --hash=sha256:6bffed67448cb4bf5dff559fb2acee1c06e7da8612b8e2a734f278b50b396603
-    # via markus
+    # via
+    #   -r requirements.in
+    #   markus
 dockerflow==2022.8.0 \
     --hash=sha256:cebd5e12ff08be43b02ea4fcaf044fb2cd4cec63c93dbfbe6e3c5b610849924c \
     --hash=sha256:fcb95ea8226551e1fd03c3c82f2b11de50434ddfa63cebc164399dabf5c78908
@@ -495,13 +497,12 @@ sphinxcontrib-serializinghtml==1.1.5 \
     --hash=sha256:352a9a00ae864471d3a7ead8d7d79f5fc0b57e8b3f95e9867eb9eb28999b92fd \
     --hash=sha256:aa5f6de5dfdf809ef505c4895e51ef5c9eac17d0f287933eb49ec495280b6952
     # via sphinx
-symbolic==10.2.1 \
-    --hash=sha256:09ba5ef92f8263bfb4be36ff03852ca63bf64a5b1ea9c54927b106cab8fa0298 \
-    --hash=sha256:4257b40f5ba9b6af98e507d30996ad490c6d964dfb2072ebac3d6783a859b170 \
-    --hash=sha256:927ae7c4b83ef8eeb6f9f1ce63781ce330d341a560ff2b44fdf694d1cd5f9d42 \
-    --hash=sha256:9e6914087ad228cbda1047c6b52343627437d02f1cd8d7e1161942fe89c4c29b \
-    --hash=sha256:ba102381ff9fa6ef1364a568e3ae892b3123cfd6e335ef914865834d6296955b \
-    --hash=sha256:cbf45530f49e647c727210a83b189c572685dbe7f4ecdd13f02f0747a3a63adc
+symbolic==12.1.2 \
+    --hash=sha256:0dcb0885387b63fdc142ac4e2f2a1693c907e4f4060db175a7ebad44e3d3c033 \
+    --hash=sha256:1b9de3f43d1ec0472309f374ba059b2484e104c311634253908f63e2474d95fc \
+    --hash=sha256:1dbe816efd47f4e869b018fedadf18a3110e066d9db6859fd6d10c406d407585 \
+    --hash=sha256:47e441a5c10339fabb24d7d3e0bc5a93ba2501c4ed7c7eea14037e60a3f3d08f \
+    --hash=sha256:5fe409b96f48705f6d9fe9f7ca68c4ccba7f75005201b6ca492d0bcf962aebb0
     # via -r requirements.in
 tomli==1.2.3 \
     --hash=sha256:05b6166bff487dc068d322585c7ea4ef78deed501cc124060e0f238e89a9231f \
