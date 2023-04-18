@@ -79,15 +79,15 @@ class DebugStats:
             ptr = ptr[part]
         return ptr
 
-    def get(self, key):
-        return self._getvalue(self.data, key, default=0)
+    def get(self, key, default=None):
+        return self._getvalue(self.data, key=key, default=default)
 
     def set(self, key, value):
-        self._setvalue(self.data, key, value)
+        self._setvalue(self.data, key=key, value=value)
 
     def incr(self, key, value=1):
-        current_value = self._getvalue(self.data, key, default=0)
-        self._setvalue(self.data, key, current_value + value)
+        current_value = self._getvalue(self.data, key=key, default=0)
+        self._setvalue(self.data, key=key, value=current_value + value)
 
     @contextlib.contextmanager
     def timer(self, key):
@@ -293,10 +293,12 @@ class SymbolicateBase:
         :arg debug_stats: DebugStats instance for keeping track of timings and other
             useful things
 
-        :returns: symcache, filename or None
+        :returns: ``(symcache, filename)`` or ``None``
 
         """
         if not debug_filename or not debug_id:
+            # If we don't have a debug_filename or debug_id, there's nothing we can
+            # download, so return None
             return
 
         symcache = None
@@ -312,7 +314,7 @@ class SymbolicateBase:
         )
 
         try:
-            # Pull it from cache if we can
+            # Pull the symcache file from cache if we can
             data = self.cache.get(cache_key)
             symcache = bytes_to_symcache(data["symcache"])
             module_filename = data["filename"]
@@ -323,48 +325,95 @@ class SymbolicateBase:
         end_time = time.perf_counter()
         debug_stats.incr("cache_lookups.time", end_time - start_time)
 
-        # We didn't find it in the cache, so try to download it
-        if symcache is None:
-            start_time = time.perf_counter()
-
-            # Download the SYM file from one of the sources
-            sym_file = self.download_sym_file(debug_filename, debug_id)
-            if sym_file is not None:
-                # Extract the module filename--this is either debug_filename or
-                # pe_filename on Windows
-                module_filename = get_module_filename(sym_file, debug_filename)
-
-                # Parse the SYM file into a symcache
-                symcache = self.parse_sym_file(debug_filename, debug_id, sym_file)
-
-                # If we have a valid symcache file, cache it to disk
-                if symcache is not None:
-                    data = symcache_to_bytes(symcache)
-
-                    data = {"symcache": data, "filename": module_filename}
-                    self.cache.set(cache_key, data)
-
-                    end_time = time.perf_counter()
-                    debug_stats.incr("downloads.count", 1)
-                    debug_stats.incr(
-                        [
-                            "downloads",
-                            "size_per_module",
-                            f"{debug_filename}/{debug_id}",
-                        ],
-                        len(sym_file),
-                    )
-                    debug_stats.incr(
-                        [
-                            "downloads",
-                            "time_per_module",
-                            f"{debug_filename}/{debug_id}",
-                        ],
-                        end_time - start_time,
-                    )
-
         if symcache:
             return symcache, module_filename
+
+        # We didn't find it in the cache, so try to download it
+        download_start_time = time.perf_counter()
+        sym_file = self.download_sym_file(debug_filename, debug_id)
+        download_end_time = time.perf_counter()
+
+        debug_stats.incr("downloads.count", 1)
+
+        if sym_file is None:
+            # Nothing was downloaded, so capture the timing as a download fail and
+            # return None
+            debug_stats.incr(
+                [
+                    "downloads",
+                    "fail_time_per_module",
+                    f"{debug_filename}/{debug_id}",
+                ],
+                download_end_time - download_start_time,
+            )
+            return
+
+        debug_stats.incr(
+            [
+                "downloads",
+                "size_per_module",
+                f"{debug_filename}/{debug_id}",
+            ],
+            len(sym_file),
+        )
+        debug_stats.incr(
+            [
+                "downloads",
+                "time_per_module",
+                f"{debug_filename}/{debug_id}",
+            ],
+            download_end_time - download_start_time,
+        )
+
+        # Extract the module filename--this is either debug_filename or
+        # pe_filename on Windows
+        module_filename = get_module_filename(sym_file, debug_filename)
+
+        # Parse the SYM file into a symcache
+        parse_start_time = time.perf_counter()
+        symcache = self.parse_sym_file(debug_filename, debug_id, sym_file)
+        parse_end_time = time.perf_counter()
+
+        if symcache is None:
+            # The sym file we downloaded isn't valid, so capture timings and return None
+            debug_stats.incr(
+                [
+                    "parse_sym",
+                    "fail_time_per_module",
+                    f"{debug_filename}/{debug_id}",
+                ],
+                parse_end_time - parse_start_time,
+            )
+            return
+
+        debug_stats.incr(
+            [
+                "parse_sym",
+                "time_per_module",
+                f"{debug_filename}/{debug_id}",
+            ],
+            parse_end_time - parse_start_time,
+        )
+
+        # If we have a valid symcache file, cache it to disk, capture some debug stats,
+        # and then return it
+        save_start_time = time.perf_counter()
+        data = symcache_to_bytes(symcache)
+        save_end_time = time.perf_counter()
+
+        data = {"symcache": data, "filename": module_filename}
+        self.cache.set(cache_key, data)
+
+        debug_stats.incr(
+            [
+                "save_symcache",
+                "time_per_module",
+                f"{debug_filename}/{debug_id}",
+            ],
+            save_end_time - save_start_time,
+        )
+
+        return symcache, module_filename
 
     def symbolicate(self, jobs, debug_stats):
         """Takes jobs and returns symbolicated results.
@@ -664,9 +713,8 @@ class SymbolicateV5(SymbolicateBase):
 
         # Add debug information to response if requested
         if is_debug:
-            all_modules = Counter()
-
             # Calculate modules
+            all_modules = Counter()
             for result in results:
                 all_modules.update(
                     [
@@ -679,13 +727,58 @@ class SymbolicateV5(SymbolicateBase):
             for key, count in all_modules.items():
                 debug_stats.set(["modules", "stacks_per_module", key], count)
 
+            # Calculate aggregates
+            debug_stats.set(
+                ["downloads", "size"],
+                sum(
+                    [0]
+                    + list(
+                        debug_stats.get(
+                            ["downloads", "size_per_module"], default={}
+                        ).values()
+                    )
+                ),
+            )
+            debug_stats.set(
+                ["downloads", "time"],
+                sum(
+                    [0]
+                    + list(
+                        debug_stats.get(
+                            ["downloads", "time_per_module"], default={}
+                        ).values()
+                    )
+                ),
+            )
+            debug_stats.set(
+                ["parse_sym", "time"],
+                sum(
+                    [0]
+                    + list(
+                        debug_stats.get(
+                            ["parse_sym", "time_per_module"], default={}
+                        ).values()
+                    )
+                ),
+            )
+            debug_stats.set(
+                ["save_symcache", "time"],
+                sum(
+                    [0]
+                    + list(
+                        debug_stats.get(
+                            ["save_symcache", "time_per_module"], default={}
+                        ).values()
+                    )
+                ),
+            )
+
             # Set values to 0 if they're missing by incrementing them by 0
             debug_stats.incr("cache_lookups.count", 0)
-            debug_stats.incr("cache_lookups.time", 0)
+            debug_stats.incr("cache_lookups.time", 0.0)
             debug_stats.incr("downloads.count", 0)
-            debug_stats.incr("downloads.time", 0)
-            debug_stats.incr("downloads.size", 0)
 
+            # Add debug stats to response
             response["debug"] = debug_stats.data
 
         num_jobs = len(jobs)
