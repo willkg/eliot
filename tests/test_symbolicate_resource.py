@@ -286,12 +286,12 @@ class TestSymbolicateBase:
                 (
                     "eliot.libsymbolic",
                     40,
-                    f"error looking up debug id in SYM file: {debug_filename} {debug_id}",
+                    f"error looking up debug id in SYM file: {debug_filename!r} {debug_id!r}",
                 ),
                 (
                     "eliot.symbolicate_resource",
                     40,
-                    f"sym file parse error: testproj '{debug_id}'",
+                    f"sym file parse error: {debug_filename!r} {debug_id!r}",
                 ),
             ]
             mm.assert_incr(
@@ -337,7 +337,7 @@ class TestSymbolicateBase:
         symcache.dump_into(data)
         data = {"filename": debug_filename, "symcache": data.getvalue()}
 
-        cache_key = "%s/%s.symc" % (debug_filename, debug_id.upper())
+        cache_key = f"{debug_filename}/{debug_id.upper()}.symc"
         cache.set(cache_key, data)
 
         debug_stats = DebugStats()
