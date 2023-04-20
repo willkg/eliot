@@ -125,11 +125,11 @@ def parse_sym_file(debug_filename, debug_id, data):
 
     except LookupError as exc:
         LOGGER.exception(
-            f"error looking up debug id in SYM file: {debug_filename} {debug_id}"
+            "error looking up debug id in SYM file: %r %r", debug_filename, debug_id
         )
         raise ParseSymFileError(
             reason_code="sym_debug_id_lookup_error",
-            msg="error looking up debug id in sym file {debug_filename} {debug_id}",
+            msg=f"error looking up debug id in sym file {debug_filename!r} {debug_id!r}",
         ) from exc
 
     except (
@@ -138,10 +138,10 @@ def parse_sym_file(debug_filename, debug_id, data):
         symbolic.SymCacheErrorBadDebugFile,
     ) as exc:
         # Invalid symcache
-        LOGGER.exception(f"error with SYM file: {debug_filename} {debug_id}")
+        LOGGER.exception("error with SYM file: %r %r", debug_filename, debug_id)
         raise ParseSymFileError(
             reason_code="sym_malformed",
-            msg="error with sym file {debug_filename} {debug_id}",
+            msg=f"error with sym file {debug_filename!r} {debug_id!r}",
         ) from exc
 
     return symcache

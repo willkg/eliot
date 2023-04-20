@@ -93,7 +93,7 @@ class HTTPSource(Source):
 
         """
         # NOTE(willkg): This has to match Tecken's upload code
-        return "%s/%s/%s" % (debug_filename, debug_id, filename)
+        return f"{debug_filename}/{debug_id}/{filename}"
 
     @time_download("eliot.downloader.download")
     @backoff.on_exception(
@@ -154,7 +154,7 @@ class HTTPSource(Source):
 
         """
         key = self._make_key(debug_filename, debug_id, filename)
-        url = "%s%s" % (self.source_url, key)
+        url = f"{self.source_url}{key}"
 
         try:
             return self.download_file(url)
@@ -205,5 +205,5 @@ class SymbolFileDownloader:
             )
         else:
             raise FileNotFound(
-                "File not found: %s %s %s" % (debug_filename, debug_id, filename)
+                f"File not found: {debug_filename} {debug_id} {filename}"
             )

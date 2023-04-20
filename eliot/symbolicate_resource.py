@@ -133,7 +133,7 @@ def validate_modules(modules):
 
     for i, item in enumerate(modules):
         if not isinstance(item, list) or len(item) != 2:
-            LOGGER.debug(f"invalid module {item!r}")
+            LOGGER.debug("invalid module %r", item)
             raise InvalidModules(
                 f"module index {i} does not have a debug_filename and debug_id"
             )
@@ -142,11 +142,11 @@ def validate_modules(modules):
         if not isinstance(debug_filename, str) or not VALID_DEBUG_FILENAME.match(
             debug_filename
         ):
-            LOGGER.debug(f"invalid debug_filename {modules[i]!r}")
+            LOGGER.debug("invalid debug_filename %r", modules[i])
             raise InvalidModules(f"module index {i} has an invalid debug_filename")
 
         if not isinstance(debug_id, str) or not VALID_DEBUG_ID.match(debug_id):
-            LOGGER.debug(f"invalid debug_id {modules[i]!r}")
+            LOGGER.debug("invalid debug_id %r", modules[i])
             raise InvalidModules(f"module index {i} has an invalid debug_id")
 
 
@@ -168,32 +168,32 @@ def validate_stacks(stacks, modules):
 
     for i, stack in enumerate(stacks):
         if not isinstance(stack, list):
-            LOGGER.debug(f"invalid stack {stack!r}")
+            LOGGER.debug("invalid stack %r", stack)
             raise InvalidStacks(f"stack {i} is not a list")
 
         for frame_i, frame in enumerate(stack):
             if not isinstance(frame, list) or len(frame) != 2:
-                LOGGER.debug(f"invalid frame {frame!r}")
+                LOGGER.debug("invalid frame %r", frame)
                 raise InvalidStacks(
                     f"stack {i} frame {frame_i} is not a list of two items"
                 )
 
             module_index, module_offset = frame
             if not isinstance(module_index, int):
-                LOGGER.debug(f"invalid module_index {frame!r}")
+                LOGGER.debug("invalid module_index %r", frame)
                 raise InvalidStacks(
                     f"stack {i} frame {frame_i} has an invalid module_index"
                 )
             # The module_index is -1 if the memory address isn't in a module and
             # it's an offset in the binary
             if not -1 <= module_index < len(modules):
-                LOGGER.debug(f"invalid module_index {frame}")
+                LOGGER.debug("invalid module_index %r", frame)
                 raise InvalidStacks(
                     f"stack {i} frame {frame_i} has a module_index that isn't in modules"
                 )
 
             if not isinstance(module_offset, int) or module_offset < -1:
-                LOGGER.debug(f"invalid module_offset {frame!r}")
+                LOGGER.debug("invalid module_offset %r", frame)
                 raise InvalidStacks(
                     f"stack {i} frame {frame_i} has an invalid module_offset"
                 )
@@ -271,13 +271,13 @@ class SymbolicateBase:
         except BadDebugIDError:
             # If the debug id isn't valid, then there's nothing to parse, so
             # log something, emit a metric, and move on
-            LOGGER.exception(f"debug_id parse error: {debug_id!r}")
+            LOGGER.exception("debug_id parse error: %r", debug_id)
             METRICS.incr(
                 "eliot.symbolicate.parse_sym_file.error", tags=["reason:bad_debug_id"]
             )
 
         except ParseSymFileError as psfe:
-            LOGGER.exception(f"sym file parse error: {debug_filename} {debug_id!r}")
+            LOGGER.exception("sym file parse error: %r %r", debug_filename, debug_id)
             METRICS.incr(
                 "eliot.symbolicate.parse_sym_file.error",
                 tags=[f"reason:{psfe.reason_code}"],
@@ -659,13 +659,13 @@ class SymbolicateV4(SymbolicateBase):
                     function = str(frame["module_offset"])
             else:
                 function = frame["function"]
-            return "{} (in {})".format(function, frame["module"])
+            return f"{function} (in {frame['module']})"
 
         symbolicated_stacks = [
             [frame_to_function(frame) for frame in stack] for stack in symdata["stacks"]
         ]
         known_modules = [
-            symdata["found_modules"].get("%s/%s" % (debug_filename, debug_id), None)
+            symdata["found_modules"].get(f"{debug_filename}/{debug_id}", None)
             for debug_filename, debug_id in payload["memoryMap"]
         ]
 
