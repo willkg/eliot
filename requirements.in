@@ -19,7 +19,7 @@ requests==2.28.2
 requests-mock==1.10.0
 ruff==0.0.262
 sentry-sdk==1.20.0
-Sphinx==6.2.0
+Sphinx==6.2.1
 sphinxcontrib-httpdomain==1.8.1
 sphinx-rtd-theme==1.2.0
 symbolic==12.1.2
