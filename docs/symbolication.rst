@@ -83,8 +83,8 @@ becomes:
                            debug filename
 
 
-Symbolication
--------------
+What is Symbolication?
+----------------------
 
 Given a set of modules and a set of stacks, *symbolication* is the act of
 fetching the debug symbols files for the modules and then looking up the
@@ -119,6 +119,61 @@ you might end up with something like this:
     2  xul.pdb  mozilla::net::HttpChannelChild::OnStopRequest(nsresult const&, mozilla::net::ResourceTimingStructArgs const&, mozilla::net::nsHttpHeaderArray const&, nsTArray<mozilla::net::ConsoleReportCollected> const&)
     3  xul.pdb  std::_Func_impl_no_alloc<`lambda at /builds/worker/checkouts/gecko/netwerk/protocol/http/HttpChannelChild.cpp:1001:11',void>::_Do_call()
     ...
+
+
+Tips for Symbolication
+======================
+
+If you're trying to symbolication large numbers of things and it's going slowly,
+here are some things you can try:
+
+1. **Always set the User-Agent.**
+
+   Always set the user agent. If possible, include the url to the git repository
+   where your code is stored.
+
+2. **Wait and retry on HTTP 429 and HTTP 5xx responses.**
+
+   If you get an HTTP 429 or HTTP 5xx response, wait and retry again. You could
+   use a backoff of (0s, 1s, 2s, 3s, 4s, 5s).
+
+   You should always get back a JSON response. If you don't, treat that like
+   a temporary failure, wait a bit and try again.
+
+3. If you're getting a 200 response, but some frames aren't symbolicated, then
+   either there are no debugging symbols available for that module or the
+   debugging symbols for that module are malformed.
+
+   You can see if we have debugging symbols and check to see if they're
+   well-formed by requesting the module from `Mozilla Symbols Server
+   <https://symbols.mozilla.org/>`__.
+
+4. **Batch symbolication requests as a single request with multiple jobs.**
+
+   If you batch your symbolication requests it'll reduce the HTTP
+   request/response overhead and improve the likelihood that the request
+   handler can take advantage of the symcache LRU cache.
+
+   Further, it's best to batch requests for the same platform/buildid/product.
+   That'll reduce the number of times the request handler has to parse the xul
+   module sym file to at most 1.
+
+   For example, if you were trying to symbolicate 1,000,000 crash pings from
+   yesterday, you should:
+
+   1. sort them by platform/buildid/product
+   2. for each platform/buildid/product tuple:
+
+      1. for each N crash pings
+
+         1. create a symbolication request
+         2. perform the symbolication request
+
+   Currently, a good `N` is 1,000, but it depends on the size of the stacks and
+   what other modules are involved. You may find a lower `N` is better.
+
+   If this isn't helpful, we want to know! Please `write up a bug and tell us
+   <https://bugzilla.mozilla.org/enter_bug.cgi?product=Eliot&component=General>`__.
 
 
 Symbolication: /symbolicate/v5
@@ -218,7 +273,6 @@ Symbolication: /symbolicate/v5
 
    .. [#prettyresponse] The example response is indented for readability.
 
-
    Here's an example you can copy and paste--though symbols do age out of our
    system, so this may not be all that exciting:
 
@@ -228,23 +282,6 @@ Symbolication: /symbolicate/v5
           -d '{"jobs": [{"stacks":[[[0,11723767],[1, 65802]]],"memoryMap":[["xul.pdb","44E4EC8C2F41492B9369D6B9A059577C2"],["wntdll.pdb","D74F79EB1F8D4A45ABCD2F476CCABACC2"]]}]}' \
           https://symbolication.services.mozilla.com/symbolicate/v5
 
-
-   .. Note:: Helpful tips!
-
-      1. Try to batch symbolication so a single request contains multiple jobs.
-         That'll reduce the HTTP request/response overhead.
-
-         If you can, batch requests for the same build of the same product.
-
-      2. If you get an HTTP 429 or HTTP 5xx response, wait and retry again. You could
-         use a backoff of (0s, 1s, 2s, 3s, 4s, 5s).
-
-      3. You should always get back a JSON response. If you don't, treat that like
-         a temporary failure, wait a bit and try again.
-
-      4. If you're getting a 200 response, but some frames aren't symbolicated,
-         then either Eliot doesn't have debugging symbols for that module or
-         the debugging symbols for that module are malformed.
 
    :<json jobs: array of json objects each specifying a job
        to symbolicate
