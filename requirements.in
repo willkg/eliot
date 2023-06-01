@@ -24,4 +24,4 @@ sphinxcontrib-httpdomain==1.8.1
 sphinx-rtd-theme==1.2.0
 symbolic==12.1.2
 urllib3==1.26.15
-werkzeug==2.2.3
+werkzeug==2.3.4
