@@ -17,7 +17,7 @@ pip-tools==6.13.0
 pytest==7.3.1
 requests==2.28.2
 requests-mock==1.10.0
-ruff==0.0.262
+ruff==0.0.275
 sentry-sdk==1.20.0
 Sphinx==6.2.0
 sphinxcontrib-httpdomain==1.8.1
