@@ -2,11 +2,11 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-import json
 import pathlib
 from unittest.mock import ANY
 
 from everett.manager import ConfigManager, ConfigDictEnv, ConfigOSEnv
+from fillmore.test import diff_event
 from markus.testing import MetricsMock
 import pytest
 
@@ -484,7 +484,12 @@ BROKEN_EVENT = {
             "name": "CPython",
             "version": ANY,
             "build": ANY,
-        }
+        },
+        "trace": {
+            "parent_span_id": None,
+            "span_id": ANY,
+            "trace_id": ANY,
+        },
     },
     "modules": ANY,
     "release": ANY,
@@ -559,11 +564,8 @@ def test_sentry_scrubbing(sentry_helper, cm_client, monkeypatch, tmpdir):
         # Drop the "_meta" bit because we don't want to compare that.
         del event["_meta"]
 
-        # If this test fails, this will print out the new event that you can copy and
-        # paste and then edit above
-        print(json.dumps(event, indent=4, sort_keys=True))
-
-        assert event == BROKEN_EVENT
+        differences = diff_event(event, BROKEN_EVENT)
+        assert differences == []
 
 
 def test_count_sentry_scrub_error():
