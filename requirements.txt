@@ -358,9 +358,9 @@ pep517==0.12.0 \
     --hash=sha256:931378d93d11b298cf511dd634cf5ea4cb249a28ef84160b3247ee9afb4e8ab0 \
     --hash=sha256:dd884c326898e2c6e11f9e0b64940606a93eb10ea022a2e067959f3a110cf161
     # via build
-pip-tools==7.1.0 \
-    --hash=sha256:4e60b7d05b046f49ad5bf3c2818df8e78dec5820e9b331cd9898cff5ec19ff2f \
-    --hash=sha256:f6ead499e726c8cfee04b2dea6282a9faf29663c378d9a4aca2ea6b86c8ec715
+pip-tools==7.3.0 \
+    --hash=sha256:8717693288720a8c6ebd07149c93ab0be1fced0b5191df9e9decd3263e20d85e \
+    --hash=sha256:8e9c99127fe024c025b46a0b2d15c7bd47f18f33226cf7330d35493663fc1d1d
     # via -r requirements.in
 platformdirs==2.4.1 \
     --hash=sha256:1d7385c7db91728b83efd0ca99a5afb296cab9d0ed8313a45ed8ba17967ecfca \
@@ -527,9 +527,9 @@ urllib3==2.0.4 \
     #   -r requirements.in
     #   requests
     #   sentry-sdk
-werkzeug==2.3.6 \
-    --hash=sha256:935539fa1413afbb9195b24880778422ed620c0fc09670945185cce4d91a8890 \
-    --hash=sha256:98c774df2f91b05550078891dee5f0eb0cb797a522c757a2452b9cee5b202330
+werkzeug==2.3.7 \
+    --hash=sha256:2b8c0e447b4b9dbcc85dd97b6eeb4dcbaf6c8b6c3be0bd654e25553e0a2157d8 \
+    --hash=sha256:effc12dba7f3bd72e605ce49807bbe692bd729c3bb122a3b91747a6ae77df528
     # via -r requirements.in
 wheel==0.38.4 \
     --hash=sha256:965f5259b566725405b05e7cf774052044b1ed30119b5d586b2703aafe8719ac \
