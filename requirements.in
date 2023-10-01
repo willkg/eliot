@@ -18,7 +18,7 @@ pytest==7.4.0
 requests==2.31.0
 requests-mock==1.11.0
 ruff==0.0.284
-sentry-sdk==1.29.2
+sentry-sdk==1.31.0
 Sphinx==6.2.1
 sphinxcontrib-httpdomain==1.8.1
 sphinx-rtd-theme==1.2.0
