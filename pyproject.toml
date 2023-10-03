@@ -56,3 +56,11 @@ github_project = "eliot"
 # bugzilla_component = "General"
 main_branch = "main"
 tag_name_template = "v%Y.%m.%d"
+
+
+[tool.service-status]
+main_branch = "main"
+hosts = [
+    "stage=https://stage.eliot.nonprod.dataservices.mozgcp.net",
+    "prod=https://symbolication.services.mozilla.com",
+]
