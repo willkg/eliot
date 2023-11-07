@@ -1,0 +1,95 @@
+name: Build, test and push a Docker image
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get info
+        run: |
+          uname -v
+          docker info
+      - name: Create version.json
+        run: |
+          # create a version.json per
+          # https://github.com/mozilla-services/Dockerflow/blob/master/docs/version_object.md
+          printf '{"commit":"%s","version":"%s","source":"%s","build":"%s"}\n' \
+          "$GITHUB_SHA" \
+          "$GITHUB_REF_NAME" \
+          "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+          "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > version.json
+      - name: Output version.json
+        run: cat version.json
+      - name: Build Docker images
+        run: make build
+      - name: Verify requirements.txt contains correct dependencies
+        run: |
+          docker compose run --rm --no-deps test-ci bash ./bin/run_verify_reqs.sh
+      - name: Run lint check
+        run: |
+          make .env
+          docker compose run --rm --no-deps test-ci bash ./bin/run_lint.sh
+      - name: Run Eliot tests
+        run: |
+          docker compose up -d fakesentry statsd
+          docker compose run --rm test-ci bash ./bin/run_test.sh eliot
+      - name: Build docs
+        run: |
+          docker compose run --rm --no-deps test-ci bash make -C docs/ html
+      - name: Save Docker image to file
+        run: |
+          docker save -o eliot-image.tar eliot:build
+      - name: Persist Docker image
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-image
+          path: eliot-image.tar
+          retention-days: 7
+
+  push:
+    needs: build
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+    environment: build
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: artifact-writer@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com
+      - uses: google-github-actions/setup-gcloud@v1
+      - name: Load Docker image tarball from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-image
+      - name: Load tarball to Docker Image
+        run: |
+          docker load -i eliot-image.tar
+      - name: Set Docker image tag to "latest"
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "DOCKER_IMAGE_TAG=latest" >> "$GITHUB_ENV"
+      - name: Set Docker image tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          echo "DOCKER_IMAGE_TAG=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+      - name: Tag and push Docker image
+        run: |
+          gcloud --quiet auth configure-docker us-docker.pkg.dev
+          docker tag eliot:build "$DOCKER_IMAGE:$DOCKER_IMAGE_TAG"
+          docker push "$DOCKER_IMAGE:$DOCKER_IMAGE_TAG"
+        env:
+          DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE }}
