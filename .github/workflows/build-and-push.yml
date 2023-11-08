@@ -12,6 +12,10 @@ on:
 
 jobs:
   build:
+    environment: build
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -46,50 +50,21 @@ jobs:
       - name: Build docs
         run: |
           docker compose run --rm --no-deps test-ci bash make -C docs/ html
-      - name: Save Docker image to file
-        run: |
-          docker save -o eliot-image.tar eliot:build
-      - name: Persist Docker image
-        uses: actions/upload-artifact@v3
-        with:
-          name: docker-image
-          path: eliot-image.tar
-          retention-days: 7
 
-  push:
-    needs: build
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
-    environment: build
-    permissions:
-      contents: read
-      id-token: write
-    runs-on: ubuntu-latest
-    steps:
-      - name: Authenticate to GCP
-        uses: google-github-actions/auth@v1
-        with:
-          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: artifact-writer@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com
-      - uses: google-github-actions/setup-gcloud@v1
-      - name: Load Docker image tarball from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: docker-image
-      - name: Load tarball to Docker Image
-        run: |
-          docker load -i eliot-image.tar
-      - name: Set Docker image tag to "latest"
+      - name: Set Docker image tag to "latest" for updates of the main branch
         if: github.ref == 'refs/heads/main'
         run: |
-          echo "DOCKER_IMAGE_TAG=latest" >> "$GITHUB_ENV"
-      - name: Set Docker image tag
+          echo "IMAGE_TAG=latest" >> "$GITHUB_ENV"
+      - name: Set Docker image tag to the git tag for tagged builds
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          echo "DOCKER_IMAGE_TAG=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
-      - name: Tag and push Docker image
-        run: |
-          gcloud --quiet auth configure-docker us-docker.pkg.dev
-          docker tag eliot:build "$DOCKER_IMAGE:$DOCKER_IMAGE_TAG"
-          docker push "$DOCKER_IMAGE:$DOCKER_IMAGE_TAG"
-        env:
-          DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE }}
+          echo "IMAGE_TAG=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+      - name: Push the Docker image to GAR
+        if: env.IMAGE_TAG != ''
+        uses: mozilla-it/deploy-actions/docker-push@main
+        with:
+          local_image: eliot:build
+          image_repo_path: ${{ secrets.DOCKER_IMAGE_PATH }}
+          image_tag: ${{ env.IMAGE_TAG }}
+          workload_identity_pool_project_number: ${{ secrets.WORKLOAD_IDENTITY_POOL_PROJECT_NUMBER }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
