@@ -61,6 +61,6 @@ tag_name_template = "v%Y.%m.%d"
 [tool.service-status]
 main_branch = "main"
 hosts = [
-    "stage=https://stage.eliot.nonprod.dataservices.mozgcp.net",
+    "stage=https://eliot-stage.symbols.nonprod.webservices.mozgcp.net",
     "prod=https://symbolication.services.mozilla.com",
 ]
