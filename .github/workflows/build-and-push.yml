@@ -15,6 +15,7 @@ jobs:
     environment: build
     permissions:
       contents: read
+      deployments: write
       id-token: write
     runs-on: ubuntu-latest
     steps:
@@ -54,11 +55,20 @@ jobs:
       - name: Set Docker image tag to "latest" for updates of the main branch
         if: github.ref == 'refs/heads/main'
         run: |
-          echo "IMAGE_TAG=latest" >> "$GITHUB_ENV"
+          echo IMAGE_TAG=latest >> "$GITHUB_ENV"
+          # Updates to the main branch are deployed to stage.
+          echo DEPLOYMENT_ENV=stage >> "$GITHUB_ENV"
       - name: Set Docker image tag to the git tag for tagged builds
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          echo "IMAGE_TAG=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+          echo IMAGE_TAG="$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+          if [[ $GITHUB_REF_NAME =~ ^v[0-9]{4}.[0-9]{2}.[0-9]{2} ]]; then
+              # Version tags are deployed to prod.
+              echo DEPLOYMENT_ENV=prod >> "$GITHUB_ENV"
+          else
+              # Other tags are not deployed at all.
+              echo DEPLOYMENT_ENV="" >> "$GITHUB_ENV"
+          fi
       - name: Push the Docker image to GAR
         if: env.IMAGE_TAG != ''
         uses: mozilla-it/deploy-actions/docker-push@main
@@ -68,3 +78,4 @@ jobs:
           image_tag: ${{ env.IMAGE_TAG }}
           workload_identity_pool_project_number: ${{ secrets.WORKLOAD_IDENTITY_POOL_PROJECT_NUMBER }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
+          deployment_env: ${{ env.DEPLOYMENT_ENV }}
