@@ -49,6 +49,12 @@ filterwarnings = [
 ]
 
 
+[tool.paul-mclendahand]
+github_user = "mozilla-services"
+github_project = "eliot"
+main_branch = "main"
+
+
 [tool.release]
 github_user = "mozilla-services"
 github_project = "eliot"
