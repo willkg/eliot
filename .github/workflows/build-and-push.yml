@@ -5,7 +5,8 @@ on:
     branches:
       - main
     tags:
-      - '*'
+      - v[0-9]+.[0-9]+.[0-9]+
+      - v[0-9]+.[0-9]+.[0-9]+-[0-9]
   pull_request:
     branches:
       - main
@@ -62,13 +63,8 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           echo IMAGE_TAG="$GITHUB_REF_NAME" >> "$GITHUB_ENV"
-          if [[ $GITHUB_REF_NAME =~ ^v[0-9]{4}.[0-9]{2}.[0-9]{2} ]]; then
-              # Version tags are deployed to prod.
-              echo DEPLOYMENT_ENV=prod >> "$GITHUB_ENV"
-          else
-              # Other tags are not deployed at all.
-              echo DEPLOYMENT_ENV="" >> "$GITHUB_ENV"
-          fi
+          # Version tags are deployed to prod.
+          echo DEPLOYMENT_ENV=prod >> "$GITHUB_ENV"
       - name: Push the Docker image to GAR
         if: env.IMAGE_TAG != ''
         uses: mozilla-it/deploy-actions/docker-push@main
