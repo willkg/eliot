@@ -9,10 +9,20 @@
 
 # Usage: debug-sym-file.py [SYMFILE]
 
+from contextlib import contextmanager
 import os
+from time import perf_counter
 
 import click
-import symbolic
+
+from eliot.libsymbolic import convert_debug_id, parse_sym_file
+
+
+@contextmanager
+def timer():
+    start = perf_counter()
+    yield
+    click.echo(f"{perf_counter() - start:.3f}s")
 
 
 @click.command()
@@ -31,18 +41,14 @@ def sym_file_debug(ctx, symfile):
 
     parts = firstline.split(" ")
     click.echo(f"first line: {parts}")
+    debug_id = convert_debug_id(parts[3])
 
     # Parse with symbolic and create symcache
-    try:
-        click.echo("parsing with symbolic ...")
-        archive = symbolic.Archive.open(symfile)
-        click.echo("listing objects and making symcaches ...")
-        for obj in archive.iter_objects():
-            click.echo(f"* {obj.debug_id}")
-            obj.make_symcache()
-    except Exception:
-        click.echo("symbolic can't parse it")
-        raise
+    click.echo("parsing sym file with symbolic ... ", nl=False)
+    with timer():
+        with open(symfile, "rb") as fp:
+            data = fp.read()
+        parse_sym_file("file.sym", debug_id, data)
 
 
 if __name__ == "__main__":
