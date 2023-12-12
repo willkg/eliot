@@ -13,7 +13,6 @@ on:
 
 jobs:
   build:
-    environment: build
     permissions:
       contents: read
       deployments: write
@@ -67,7 +66,7 @@ jobs:
           echo DEPLOYMENT_ENV=prod >> "$GITHUB_ENV"
       - name: Push the Docker image to GAR
         if: env.IMAGE_TAG != ''
-        uses: mozilla-it/deploy-actions/docker-push@main
+        uses: mozilla-it/deploy-actions/docker-push@v3.9.0
         with:
           local_image: eliot:build
           image_repo_path: ${{ secrets.DOCKER_IMAGE_PATH }}
