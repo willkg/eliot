@@ -26,13 +26,13 @@ line-length = 88
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
-# Assume Python 3.9.
-target-version = "py39"
+# Assume Python 3.11.
+target-version = "py311"
 
 
 [tool.black]
 line-length = 88
-target-version = ["py39"]
+target-version = ["py311"]
 
 
 [tool.pytest.ini_options]
@@ -43,6 +43,8 @@ addopts = "-rsxX --showlocals --tb=native -p no:cacheprovider --import-mode=impo
 # Transform all warnings into errors
 filterwarnings = [
     "error",
+    # Falcon currently uses cgi which is going away in python 3.13
+    "ignore:'cgi' is deprecated and slated for removal in Python 3.13:DeprecationWarning",
     # sentry-sdk has a Falcon integration that needs some help and is currently
     # using a thing in Falcon that kicks up a DeprecatedWarning
     "ignore:The api_helpers module.*:falcon.util.deprecation.DeprecatedWarning",
