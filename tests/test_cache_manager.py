@@ -445,7 +445,7 @@ BROKEN_EVENT = {
                                 "num_unhandled_errors": "0",
                                 "event": ["1", "256", "0", "'xul__4byte.symc'"],
                                 "event_flags": ["<flags.CREATE: 256>"],
-                                "flags_list": "'flags.CREATE'",
+                                "flags_list": "'256'",
                                 "dir_path": ANY,
                                 "path": ANY,
                             },
