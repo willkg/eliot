@@ -62,4 +62,4 @@ services:
   statsd:
     image: hopsoft/graphite-statsd:latest
     ports:
-      - "${EXPOSE_STATSD_PORT:-8081}:80"
+      - "${EXPOSE_GRAFANA_PORT:-8081}:80"
