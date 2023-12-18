@@ -17,7 +17,7 @@ services:
     extends:
       service: base
     ports:
-      - "8000:8000"
+      - "${EXPOSE_ELIOT_PORT:-8000}:8000"
     depends_on:
       - fakesentry
       - statsd
@@ -55,15 +55,11 @@ services:
       context: docker/images/fakesentry
     image: local/eliot_fakesentry
     ports:
-      - "8090:8090"
+      - "${EXPOSE_SENTRY_PORT:-8090}:8090"
     command: run --host 0.0.0.0 --port 8090
 
   # https://hub.docker.com/r/hopsoft/graphite-statsd/
   statsd:
     image: hopsoft/graphite-statsd:latest
     ports:
-      - "8081:80"
-      - "2003-2004:2003-2004"
-      - "2023-2024:2023-2024"
-      - "8125:8125/udp"
-      - "8126:8126"
+      - "${EXPOSE_STATSD_PORT:-8081}:80"
