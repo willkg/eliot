@@ -5,7 +5,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 # default variables
-: "${ELIOT_GUNICORN_PORT:=8000}"
+: "${PORT:=8000}"
 : "${ELIOT_GUNICORN_WORKERS:=1}"
 : "${ELIOT_GUNICORN_TIMEOUT:=300}"
 : "${ELIOT_GUNICORN_MAX_REQUESTS:=0}"
@@ -16,7 +16,7 @@
 cd /app/
 
 gunicorn \
-    --bind 0.0.0.0:"${ELIOT_GUNICORN_PORT}" \
+    --bind 0.0.0.0:"${PORT}" \
     --timeout "${ELIOT_GUNICORN_TIMEOUT}" \
     --workers "${ELIOT_GUNICORN_WORKERS}" \
     --max-requests="${ELIOT_GUNICORN_MAX_REQUESTS}" \

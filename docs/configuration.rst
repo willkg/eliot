@@ -41,7 +41,7 @@ Gunicorn configuration:
    <https://github.com/mozilla-services/eliot/blob/main/bin/run_eliot_web.sh>`_.
 
 
-.. everett:option:: ELIOT_GUNICORN_PORT
+.. everett:option:: PORT
    :default: "8000"
 
    Specifies the port to listen to.
