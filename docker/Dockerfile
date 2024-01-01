@@ -1,4 +1,4 @@
-FROM python:3.11.7-slim-bullseye@sha256:18faee15e9f6e5eaa7a4098e093a8513275a5075cfeae59091fae641cc703d1a
+FROM python:3.12.1-slim-bullseye@sha256:832f8341da133d603b3141b57a55943e2fe00d431cbb89b8ca04925f3a798ee8
 
 ARG userid=10001
 ARG groupid=10001
