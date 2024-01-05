@@ -7,6 +7,9 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
+      args:
+        userid: ${USE_UID:-10001}
+        groupid: ${USE_GID:-10001}
     image: eliot:build
     env_file:
       - docker/config/local_dev.env
@@ -48,6 +51,17 @@ services:
       - docker/config/test.env
     links:
       - fakesentry
+
+  devcontainer:
+    extends:
+      service: test
+    build:
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        userid: ${USE_UID:-10001}
+        groupid: ${USE_GID:-10001}
+    image: eliot-devcontainer
+    entrypoint: ["sleep", "inf"]
 
   # https://github.com/willkg/kent
   fakesentry:
