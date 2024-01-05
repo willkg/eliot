@@ -7,12 +7,6 @@
 include .env
 export
 
-# Set these in the environment to override them. This is helpful for
-# development if you have file ownership problems because the user
-# in the container doesn't match the user on your host.
-USE_UID ?= 10001
-USE_GID ?= 10001
-
 DOCKER := $(shell which docker)
 DC=${DOCKER} compose
 
@@ -34,18 +28,30 @@ help:
 .docker-build:
 	make build
 
+.devcontainer-build:
+	make devcontainerbuild
+
 .env:
 	./bin/cp-env-file.sh
 
 .PHONY: build
 build: .env  ## | Build docker images.
-	${DC} build --build-arg userid=${USE_UID} --build-arg groupid=${USE_GID} --progress plain base
+	${DC} build --progress plain base
 	${DC} build --progress plain fakesentry statsd
 	touch .docker-build
 
 .PHONY: run
 run: .env .docker-build  ## | Run eliot and services.
 	${DC} up eliot fakesentry
+
+.PHONY: devcontainerbuild
+devcontainerbuild: .env .docker-build .devcontainer-build  ## | Build VS Code development container.
+	${DC} build --progress plain devcontainer
+	touch .devcontainer-build
+
+.PHONY: devcontainer
+devcontainer: .env .docker-build  ## | Run VS Code development container.
+	${DC} up --detach devcontainer
 
 .PHONY: stop
 stop: .env  ## | Stop docker containers.
@@ -72,8 +78,8 @@ testshell: .env .docker-build  ## | Open shell in test environment.
 
 .PHONY: docs
 docs: .env .docker-build  ## | Build docs.
-	${DC} run --rm --user ${USE_UID} --no-deps eliot bash make -C docs/ clean
-	${DC} run --rm --user ${USE_UID} --no-deps eliot bash make -C docs/ html
+	${DC} run --rm --no-deps eliot bash make -C docs/ clean
+	${DC} run --rm --no-deps eliot bash make -C docs/ html
 
 .PHONY: lint
 lint: .env .docker-build  ## | Lint code.

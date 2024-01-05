@@ -197,8 +197,7 @@ All Python code files should have an MPL v2 header at the top::
   # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-We use `black <https://black.readthedocs.io/en/stable/>`_ to reformat Python
-code.
+We use `ruff <https://docs.astral.sh/ruff/>`_ to reformat Python code.
 
 
 To lint all the code, do:
@@ -335,3 +334,64 @@ the testshell:
    app@xxx:/app$ pytest tests/test_app.py
 
    <pytest output>
+
+
+How to
+======
+
+How to set up a development container for VS Code
+-------------------------------------------------
+The repository contains configuration files to build a
+`development container <https://containers.dev/>`_ in the `.devcontainer`
+directory. If you have the "Dev Containers" extension installed in VS Code, you
+should be prompted whether you want to reopen the folder in a container on
+startup. You can also use the "Dev containers: Reopen in container" command
+from the command palette. The container has all Python requirements installed.
+IntelliSense, type checking, code formatting with Ruff and running the tests
+from the test browser are all set up to work without further configuration.
+
+VS Code should automatically start the container, but it may need to be built on
+first run:
+
+.. code-block:: shell
+
+   $ make devcontainerbuild
+
+Additionally on mac there is the potential that running git from inside any
+container that mounts the current directory to `/app`, such as the development
+container, will fail with `fatal: detected dubious ownership in repository at
+'/app'`. This is likely related to `mozilla-services/tecken#2872
+<https://github.com/mozilla-services/tecken/pull/2872>`_, and can be treated by
+running the following command from inside the development container, which will
+probably throw exceptions on some git read-only objects that are already owned
+by app:app, so that's fine:
+
+
+.. code-block:: shell
+
+   $ chown -R app:app /app
+
+
+How to change settings in your local dev environment
+----------------------------------------------------
+Edit the ``.env`` file and add/remove/change settings. These environment
+variables are used by make and automatically included by docker compose.
+
+If you are using a VS Code development container for other repositories such as
+`tecken <https://github.com/mozilla-services/tecken>`_ or
+`socorro <https://github.com/mozilla-services/socorro>`_, you may need to
+change the default ports exposed by docker compose to avoid conflicts with
+similar services, for example:
+
+.. code-block:: shell
+
+   EXPOSE_ELIOT_PORT=8100
+   EXPOSE_SENTRY_PORT=8190
+   EXPOSE_STATSD_PORT=8181
+
+If you are using a development container for VS Code, you may need to restart
+the container to pick up changes:
+
+.. code-block:: shell
+
+   $ make devcontainer
