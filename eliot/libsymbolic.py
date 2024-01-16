@@ -138,7 +138,6 @@ def parse_sym_file(debug_filename, debug_id, data):
         symbolic.SymCacheErrorBadDebugFile,
     ) as exc:
         # Invalid symcache
-        LOGGER.exception("error with SYM file: %r %r", debug_filename, debug_id)
         raise ParseSymFileError(
             reason_code="sym_malformed",
             msg=f"error with sym file {debug_filename!r} {debug_id!r}",
