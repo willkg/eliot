@@ -105,9 +105,9 @@ datadog==0.47.0 \
     # via
     #   -r requirements.in
     #   markus
-dockerflow==2022.8.0 \
-    --hash=sha256:cebd5e12ff08be43b02ea4fcaf044fb2cd4cec63c93dbfbe6e3c5b610849924c \
-    --hash=sha256:fcb95ea8226551e1fd03c3c82f2b11de50434ddfa63cebc164399dabf5c78908
+dockerflow==2024.1.0 \
+    --hash=sha256:38d6a60a01e87d33dcf802f1ef2f09ae2f375c829d3805923d88409387562d66 \
+    --hash=sha256:df1597fb3d58d759993e5b5e7f254162804882c04c09d5b7df97aa47b0a9d15b
     # via -r requirements.in
 docutils==0.18.1 \
     --hash=sha256:23010f129180089fbcd3bc08cfefccb3b890b0050e1ca00c867036e9d161b98c \
