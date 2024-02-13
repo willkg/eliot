@@ -42,7 +42,10 @@ build: .env  ## | Build docker images.
 
 .PHONY: run
 run: .env .docker-build  ## | Run eliot and services.
-	${DC} up eliot fakesentry
+	${DC} up \
+		--attach eliot \
+		--attach fakesentry \
+		eliot fakesentry
 
 .PHONY: devcontainerbuild
 devcontainerbuild: .env .docker-build .devcontainer-build  ## | Build VS Code development container.
