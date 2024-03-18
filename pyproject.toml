@@ -1,6 +1,13 @@
 [tool.ruff]
-# Enable pycodestyle (`E`), Pyflakes (`F`), and Bugbear (`B`) codes by default.
+line-length = 88
+
+target-version = "py311"
+
+[tool.ruff.lint]
+# Enable pycodestyle (`E`), Pyflakes (`F`), and Bugbear (`B`) rules
 select = ["E", "F", "B"]
+
+# Ignore line length violations
 ignore = ["E501"]
 
 unfixable = ["B"]
@@ -20,13 +27,8 @@ exclude = [
 ]
 per-file-ignores = {}
 
-line-length = 88
-
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
-
-# Assume Python 3.11.
-target-version = "py311"
 
 
 [tool.pytest.ini_options]
