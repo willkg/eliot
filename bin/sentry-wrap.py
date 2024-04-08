@@ -1,11 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 # Wraps a command such that if it fails, an error report is sent to the Sentry service
-# specified by SENTRY_DSN in the environment.
+# specified by ELIOT_SECRET_SENTRY_DSN in the environment.
 #
 # Usage: python bin/sentry-wrap.py wrap-process -- [CMD]
 #    Wraps a process in error-reporting Sentry goodness.
@@ -26,6 +26,9 @@ import sentry_sdk
 from sentry_sdk import capture_exception, capture_message
 
 
+SENTRY_DSN_VAR = "ELIOT_SECRET_SENTRY_DSN"
+
+
 @click.group()
 def cli_main():
     pass
@@ -34,10 +37,10 @@ def cli_main():
 @cli_main.command()
 @click.pass_context
 def test_sentry(ctx):
-    sentry_dsn = os.environ.get("SENTRY_DSN")
+    sentry_dsn = os.environ.get(SENTRY_DSN_VAR)
 
     if not sentry_dsn:
-        click.echo("SENTRY_DSN is not defined. Exiting.")
+        click.echo(f"{SENTRY_DSN_VAR} is not defined. Exiting.")
         sys.exit(1)
 
     sentry_sdk.init(sentry_dsn)
@@ -54,10 +57,10 @@ def test_sentry(ctx):
 @click.argument("cmd", nargs=-1)
 @click.pass_context
 def wrap_process(ctx, timeout, cmd):
-    sentry_dsn = os.environ.get("SENTRY_DSN")
+    sentry_dsn = os.environ.get(SENTRY_DSN_VAR)
 
     if not sentry_dsn:
-        click.echo("SENTRY_DSN is not defined. Exiting.")
+        click.echo(f"{SENTRY_DSN_VAR} is not defined. Exiting.")
         sys.exit(1)
 
     if not cmd:
