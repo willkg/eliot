@@ -185,9 +185,9 @@ jinja2==3.0.3 \
     --hash=sha256:077ce6014f7b40d03b47d1f1ca4b0fc8328a692bd284016f806ed0eaca390ad8 \
     --hash=sha256:611bb273cd68f3b993fabdc4064fc858c5b47a973cb5aa7999ec1ba405c87cd7
     # via sphinx
-jsonschema==4.21.1 \
-    --hash=sha256:7996507afae316306f9e2290407761157c6f78002dcf7419acb99822143d1c6f \
-    --hash=sha256:85727c00279f5fa6bedbe6238d2aa6403bedd8b4864ab11207d07df3cc1b2ee5
+jsonschema==4.22.0 \
+    --hash=sha256:5b22d434a45935119af990552c862e5d6d564e8f6601206b305a61fdf661a2b7 \
+    --hash=sha256:ff4cfd6b1367a40e7bc6411caec72effadd3db0bbe5017de188f2d6108335802
     # via -r requirements.in
 jsonschema-specifications==2023.11.2 \
     --hash=sha256:9472fc4fea474cd74bea4a2b190daeccb5a9e4db2ea80efcf7a1b582fc9a81b8 \
@@ -240,9 +240,7 @@ markupsafe==2.1.1 \
 markus[datadog]==4.2.0 \
     --hash=sha256:156398b7de56db4e8ef420a80fcce1c49b6d3d41405874a3e128cb209cf4bfd8 \
     --hash=sha256:9dd41ce53b25a3e806b0d065808fec00c4ec945e80cf5a72431bf9b61b44d7fb
-    # via
-    #   -r requirements.in
-    #   markus
+    # via -r requirements.in
 milksnake==0.1.5 \
     --hash=sha256:550ca1fc4222724149ee5a933e6bb8347630c0ed023a2a97701ab94fa256f6b4 \
     --hash=sha256:dfcd43b78bcf93897a75eea1dadf71c848319f19451cff4f3f3a628a5abe1688
