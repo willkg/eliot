@@ -105,9 +105,9 @@ datadog==0.49.1 \
     # via
     #   -r requirements.in
     #   markus
-dockerflow==2024.2.0 \
-    --hash=sha256:bab3ce211dbdf439fae21c37e17e03383d7366943789463baf6b441885f3cfa7 \
-    --hash=sha256:eff23fe7bda12d24de6c0d69ed0aea75441c171c4730be5bae8bb576a7b3e912
+dockerflow==2024.4.2 \
+    --hash=sha256:b9f92455449ba46555f57db34cccefc4c49d3533c67793624ab7e80a1625caa7 \
+    --hash=sha256:f4216a3a809093860d7b2db84ba0a25c894cb8eb98b74f4f6a04badbc4f6b0a4
     # via -r requirements.in
 docutils==0.18.1 \
     --hash=sha256:23010f129180089fbcd3bc08cfefccb3b890b0050e1ca00c867036e9d161b98c \
@@ -240,7 +240,9 @@ markupsafe==2.1.1 \
 markus[datadog]==4.2.0 \
     --hash=sha256:156398b7de56db4e8ef420a80fcce1c49b6d3d41405874a3e128cb209cf4bfd8 \
     --hash=sha256:9dd41ce53b25a3e806b0d065808fec00c4ec945e80cf5a72431bf9b61b44d7fb
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   markus
 milksnake==0.1.5 \
     --hash=sha256:550ca1fc4222724149ee5a933e6bb8347630c0ed023a2a97701ab94fa256f6b4 \
     --hash=sha256:dfcd43b78bcf93897a75eea1dadf71c848319f19451cff4f3f3a628a5abe1688
