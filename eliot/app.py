@@ -253,7 +253,7 @@ class EliotApp(falcon.App):
         """
         # NOTE(willkg): we might be able to get rid of the sentry event capture if the
         # FalconIntegration in sentry-sdk gets fixed
-        with sentry_sdk.configure_scope() as scope:
+        with sentry_sdk.new_scope() as scope:
             # The SentryWsgiMiddleware tacks on an unhelpful transaction value which
             # makes things hard to find in the Sentry interface, so we stomp on that
             # with the req.path
