@@ -34,7 +34,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 [tool.pytest.ini_options]
 norecursedirs = [".cache", "__pycache__"]
 testpaths = "tests/"
-addopts = "-rsxX --showlocals --tb=native -p no:cacheprovider --import-mode=importlib"
+addopts = "-rsxX --showlocals --tb=native -p no:cacheprovider"
 
 # Transform all warnings into errors
 filterwarnings = [
