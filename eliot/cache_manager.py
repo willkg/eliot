@@ -36,7 +36,7 @@ from inotify_simple import INotify, flags
 
 from eliot.app import build_config_manager
 from eliot.libdockerflow import get_release_name
-from eliot.liblogging import setup_logging, log_config
+from eliot.liblogging import set_up_logging, log_config
 from eliot.libmarkus import set_up_metrics, METRICS
 
 
@@ -130,7 +130,7 @@ class DiskCacheManager:
         self.config_manager = config_manager
         self.config = config_manager.with_options(self)
 
-        # NOTE(willkg): This needs to mirror setup of cachedir in Eliot app
+        # NOTE(willkg): This needs to mirror the setup of cachedir in Eliot app
         self.cachedir = (
             pathlib.Path(self.config("symbols_cache_dir")).resolve() / "cache"
         )
@@ -152,8 +152,8 @@ class DiskCacheManager:
             | flags.MOVED_TO
         )
 
-    def setup(self):
-        setup_logging(
+    def set_up(self):
+        set_up_logging(
             logging_level=self.config("logging_level"),
             debug=self.config("local_dev_env"),
             processname="disk_manager",
@@ -431,7 +431,7 @@ def main(print_config):
         return
 
     cache_manager.verify_configuration()
-    cache_manager.setup()
+    cache_manager.set_up()
     cache_manager.run_loop()
 
 
