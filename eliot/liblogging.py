@@ -12,10 +12,10 @@ import logging.config
 from everett.manager import get_runtime_config, generate_uppercase_key
 
 
-_IS_LOGGING_SETUP = False
+_IS_LOGGING_SET_UP = False
 
 
-def setup_logging(logging_level, debug=False, processname=None):
+def set_up_logging(logging_level, debug=False, processname=None):
     """Initialize Python logging configuration.
 
     Note: This only sets up logging once per process. Additional calls will get ignored.
@@ -25,8 +25,8 @@ def setup_logging(logging_level, debug=False, processname=None):
     :arg processname: the process name to log
 
     """
-    global _IS_LOGGING_SETUP
-    if _IS_LOGGING_SETUP:
+    global _IS_LOGGING_SET_UP
+    if _IS_LOGGING_SET_UP:
         return
 
     processname = processname or "main"
@@ -80,7 +80,7 @@ def setup_logging(logging_level, debug=False, processname=None):
         dc["root"]["handlers"] = ["console"]
 
     logging.config.dictConfig(dc)
-    _IS_LOGGING_SETUP = True
+    _IS_LOGGING_SET_UP = True
 
 
 def log_config(logger, config_manager, component):

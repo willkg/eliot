@@ -21,7 +21,7 @@ SYMROOT = str(Path(__file__).parent.parent)
 sys.path.insert(0, SYMROOT)
 
 from eliot.app import get_app  # noqa
-from eliot.liblogging import setup_logging  # noqa
+from eliot.liblogging import set_up_logging  # noqa
 
 
 def pytest_runtest_setup(item):
@@ -35,7 +35,7 @@ def pytest_runtest_setup(item):
 def pytest_collection_finish(session):
     # After pytest test collection has finished, make sure we set up logging and metrics
     # to sensible default values.
-    setup_logging(
+    set_up_logging(
         logging_level="DEBUG",
         debug=True,
         processname="tests",

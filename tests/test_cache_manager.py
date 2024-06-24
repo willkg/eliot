@@ -52,7 +52,7 @@ class TestLastUpdatedOrderedDict:
 class DiskCacheManagerTestClient:
     def __init__(self, cache_manager):
         self.cache_manager = cache_manager
-        self.cache_manager.setup()
+        self.cache_manager.set_up()
 
     @classmethod
     def build_config(cls, new_config=None):
@@ -74,12 +74,12 @@ class DiskCacheManagerTestClient:
 
         """
         self.cache_manager = get_cache_manager(self.build_config(new_config))
-        self.cache_manager.setup()
+        self.cache_manager.set_up()
 
 
 @pytest.fixture
 def cm_client(tmpdir):
-    """Test cache manager setup with tmpdir."""
+    """Test the cache manager setup with tmpdir."""
     config = {
         "ELIOT_SYMBOLS_CACHE_DIR": str(tmpdir),
     }

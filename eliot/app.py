@@ -37,7 +37,7 @@ from eliot.health_resource import (
     VersionResource,
 )
 from eliot.libdockerflow import get_release_name
-from eliot.liblogging import setup_logging, log_config
+from eliot.liblogging import set_up_logging, log_config
 from eliot.libmarkus import set_up_metrics, METRICS
 from eliot.symbolicate_resource import SymbolicateV4, SymbolicateV5
 
@@ -170,7 +170,7 @@ class EliotApp(falcon.App):
         self.config = config_manager.with_options(self)
         self._all_resources = {}
 
-    def setup(self):
+    def set_up(self):
         LOGGER.info("Repository root: %s", REPOROOT_DIR)
 
         # Set up uncaught error handler
@@ -300,7 +300,7 @@ def get_app(config_manager=None):
     # Set up logging and sentry first, so we have something to log to. Then
     # build and log everything else.
     app_config = config_manager.with_options(EliotApp)
-    setup_logging(
+    set_up_logging(
         logging_level=app_config("logging_level"),
         debug=app_config("local_dev_env"),
         processname="webapp",
@@ -311,7 +311,7 @@ def get_app(config_manager=None):
     # Create the app and verify configuration
     app = EliotApp(config_manager)
     app.verify_configuration()
-    app.setup()
+    app.set_up()
     app.verify()
 
     if app.config("local_dev_env"):
