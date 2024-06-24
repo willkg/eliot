@@ -1,0 +1,151 @@
+# statsd metrics emitted using Markus.
+#
+# When adding a new metric, make sure to add it here first.
+---
+
+eliot.pageview:
+  type: "incr"
+  description: |
+    Counter for page views.
+
+    Tags:
+
+    * ``path``: the url path
+    * ``method``: the request method
+
+eliot.symbolicate.api:
+  type: "timing"
+  description: |
+    Timer for long a symbolication API request takes to handle.
+
+    Tags:
+
+    * ``version``: the symbolication api version
+
+      * ``v4``: the v4 API
+      * ``v5``: the v5 API
+
+eliot.symbolicate.proxied:
+  type: "incr"
+  description: |
+    Counter for symbolication requests tagged by whether they
+    were proxied or not.
+
+    Tags:
+
+        * ``proxied``: "1" if proxied, "0" if not
+
+eliot.symbolicate.request_error:
+  type: "incr"
+  description: |
+    Counter for errors in incoming symbolication requests.
+
+    Tags:
+
+    * ``reason``: the error reason
+
+      * ``bad_json``: the payload is not valid JSON
+      * ``invalid_modules``: the payload has invalid modules
+      * ``invalid_stacks``: the payload has invalid stacks
+      * ``too_many_jobs``: (v5) the payload has too many jobs in it
+
+eliot.downloader.download:
+  type: "histogram"
+  description: |
+    Timer for how long it takes to download SYM files.
+
+    Tags:
+
+    * ``response``: the HTTP response we got back
+
+      * ``success``: HTTP 200
+      * ``fail``: HTTP 404, 500, etc
+
+eliot.symbolicate.parse_sym_file.error:
+  type: "incr"
+  description: |
+    Counter for when a sym file fails to parse.
+
+    Tags:
+
+    * ``reason``: the reason it failed to parse
+
+      * ``bad_debug_id``: debug_id is not valid
+      * ``sym_debug_id_lookup_error``: when the debug_id isn't in the sym file
+      * ``sym_tmp_file_error``: error creating tmp file to save the sym file
+        to disk
+
+eliot.symbolicate.parse_sym_file.parse:
+  type: "timing"
+  description: |
+    Timer for how long it takes to parse sym files with Symbolic.
+
+eliot.symbolicate.jobs_count:
+  type: "histogram"
+  description: |
+    Histogram for how many jobs were in the symbolication request.
+
+    Tags:
+
+    * ``version``: the symbolication api version
+
+      * ``v4``: the v4 API
+      * ``v5``: the v5 API
+
+eliot.symbolicate.stacks_count:
+  type: "histogram"
+  description: |
+    Histogram for how many stacks per job were in the symbolication request.
+
+    Tags:
+
+    * ``version``: the symbolication api version
+
+      * ``v4``: the v4 API
+      * ``v5``: the v5 API
+
+eliot.symbolicate.frames_count:
+  type: "histogram"
+  description: |
+    Histogram for how many frames per stack were in the symbolication request.
+
+eliot.diskcache.get:
+  type: "histogram"
+  description: |
+    Timer for how long it takes to get symcache files from the disk cache.
+
+    Tags:
+
+    * ``result``: the cache result
+
+      * ``hit``: the file was in cache
+      * ``error``: the file was in cache, but there was an error reading it
+      * ``miss``: the file was not in cache
+
+eliot.diskcache.set:
+  type: "histogram"
+  description: |
+    Timer for how long it takes to save a symcache file to the disk cache.
+
+    Tags:
+
+    * ``result``: the cache result
+
+      * ``success``: the file was saved successfully
+      * ``fail``: the file was not saved successfully
+
+eliot.diskcache.evict:
+  type: "incr"
+  description: |
+    Counter for disk cache evictions.
+
+eliot.diskcache.usage:
+  type: "gauge"
+  description: |
+    Gauge for how much of the cache is in use."
+
+eliot.sentry_scrub_error:
+  type: "incr"
+  description: |
+    Emitted when there are errors scrubbing Sentry events. Monitor these
+    because it means we're missing Sentry event data.

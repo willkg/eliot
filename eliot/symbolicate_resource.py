@@ -223,7 +223,7 @@ class SymbolicateBase:
 
         """
         is_proxied = req.get_header("TeckenProxied", default="0")
-        METRICS.incr("eliot.symbolicate.proxied", tags=[f"proxied:{is_proxied}"])
+        METRICS.incr("symbolicate.proxied", tags=[f"proxied:{is_proxied}"])
 
     def download_sym_file(self, debug_filename, debug_id):
         """Download a symbol file.
@@ -254,7 +254,7 @@ class SymbolicateBase:
 
         return data
 
-    @METRICS.timer_decorator("eliot.symbolicate.parse_sym_file.parse")
+    @METRICS.timer_decorator("symbolicate.parse_sym_file.parse")
     def parse_sym_file(self, debug_filename, debug_id, data):
         """Convert sym file to symcache file
 
@@ -273,13 +273,13 @@ class SymbolicateBase:
             # log something, emit a metric, and move on
             LOGGER.exception("debug_id parse error: %r", debug_id)
             METRICS.incr(
-                "eliot.symbolicate.parse_sym_file.error", tags=["reason:bad_debug_id"]
+                "symbolicate.parse_sym_file.error", tags=["reason:bad_debug_id"]
             )
 
         except ParseSymFileError as psfe:
             LOGGER.exception("sym file parse error: %r %r", debug_filename, debug_id)
             METRICS.incr(
-                "eliot.symbolicate.parse_sym_file.error",
+                "symbolicate.parse_sym_file.error",
                 tags=[f"reason:{psfe.reason_code}"],
             )
 
@@ -567,7 +567,7 @@ class SymbolicateBase:
             job_result["found_modules"] = found_modules
 
         # Total number of frames we symbolicated in this request
-        METRICS.histogram("eliot.symbolicate.frames_count", value=len(frames))
+        METRICS.histogram("symbolicate.frames_count", value=len(frames))
 
         return job_results
 
@@ -576,7 +576,7 @@ def _load_payload(req):
     try:
         return json.load(req.bounded_stream)
     except json.JSONDecodeError as exc:
-        METRICS.incr("eliot.symbolicate.request_error", tags=["reason:bad_json"])
+        METRICS.incr("symbolicate.request_error", tags=["reason:bad_json"])
         raise falcon.HTTPBadRequest(title="Payload is not valid JSON") from exc
 
 
@@ -599,9 +599,7 @@ def _validate_and_measure_jobs(jobs, api_version):
         try:
             validate_modules(modules)
         except InvalidModules as exc:
-            METRICS.incr(
-                "eliot.symbolicate.request_error", tags=["reason:invalid_modules"]
-            )
+            METRICS.incr("symbolicate.request_error", tags=["reason:invalid_modules"])
             # NOTE(willkg): the str of an exception is the message; we need to
             # control the message carefully so we're not spitting unsanitized data
             # back to the user in the error
@@ -612,9 +610,7 @@ def _validate_and_measure_jobs(jobs, api_version):
         try:
             validate_stacks(stacks, modules)
         except InvalidStacks as exc:
-            METRICS.incr(
-                "eliot.symbolicate.request_error", tags=["reason:invalid_stacks"]
-            )
+            METRICS.incr("symbolicate.request_error", tags=["reason:invalid_stacks"])
             # NOTE(willkg): the str of an exception is the message; we need to
             # control the message carefully so we're not spitting unsanitized data
             # back to the user in the error
@@ -623,7 +619,7 @@ def _validate_and_measure_jobs(jobs, api_version):
             ) from exc
 
         METRICS.histogram(
-            "eliot.symbolicate.stacks_count",
+            "symbolicate.stacks_count",
             value=len(stacks),
             tags=[f"version:{api_version}"],
         )
@@ -632,8 +628,9 @@ def _validate_and_measure_jobs(jobs, api_version):
 # NOTE(Willkg): This API endpoint version is deprecated. We shouldn't add new features
 # or fix bugs with it.
 class SymbolicateV4(SymbolicateBase):
-    @METRICS.timer_decorator("eliot.symbolicate.api", tags=["version:v4"])
+    @METRICS.timer_decorator("symbolicate.api", tags=["version:v4"])
     def on_post(self, req, resp):
+        METRICS.incr("pageview", tags=["path:/symbolicate/v4", "method:post"])
         self.check_proxied(req)
 
         # NOTE(willkg): we define this and pass it around, but don't return it in the
@@ -677,8 +674,9 @@ class SymbolicateV4(SymbolicateBase):
 
 
 class SymbolicateV5(SymbolicateBase):
-    @METRICS.timer_decorator("eliot.symbolicate.api", tags=["version:v5"])
+    @METRICS.timer_decorator("symbolicate.api", tags=["version:v5"])
     def on_post(self, req, resp):
+        METRICS.incr("pageview", tags=["path:/symbolicate/v5", "method:post"])
         self.check_proxied(req)
 
         payload = _load_payload(req)
@@ -691,15 +689,13 @@ class SymbolicateV5(SymbolicateBase):
             jobs = [payload]
 
         if len(jobs) > MAX_JOBS:
-            METRICS.incr(
-                "eliot.symbolicate.request_error", tags=["reason:too_many_jobs"]
-            )
+            METRICS.incr("symbolicate.request_error", tags=["reason:too_many_jobs"])
             raise falcon.HTTPBadRequest(
                 title=f"please limit number of jobs in a single request to <= {MAX_JOBS}"
             )
 
         METRICS.histogram(
-            "eliot.symbolicate.jobs_count", value=len(jobs), tags=["version:v5"]
+            "symbolicate.jobs_count", value=len(jobs), tags=["version:v5"]
         )
         LOGGER.debug(f"Number of jobs: {len(jobs)}")
 

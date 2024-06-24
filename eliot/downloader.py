@@ -95,7 +95,7 @@ class HTTPSource(Source):
         # NOTE(willkg): This has to match Tecken's upload code
         return f"{debug_filename}/{debug_id}/{filename}"
 
-    @time_download("eliot.downloader.download")
+    @time_download("downloader.download")
     @backoff.on_exception(
         wait_gen=backoff.expo,
         max_tries=5,

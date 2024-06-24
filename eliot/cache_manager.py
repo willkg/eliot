@@ -37,7 +37,7 @@ from inotify_simple import INotify, flags
 from eliot.app import build_config_manager
 from eliot.libdockerflow import get_release_name
 from eliot.liblogging import setup_logging, log_config
-from eliot.libmarkus import setup_metrics, METRICS
+from eliot.libmarkus import set_up_metrics, METRICS
 
 
 if __name__ == "__main__":
@@ -52,7 +52,7 @@ MAX_ERRORS = 10
 
 
 def count_sentry_scrub_error(msg):
-    METRICS.incr("eliot.sentry_scrub_error", value=1, tags=["service:cachemanager"])
+    METRICS.incr("sentry_scrub_error", value=1, tags=["service:cachemanager"])
 
 
 class LastUpdatedOrderedDict(OrderedDict):
@@ -158,7 +158,7 @@ class DiskCacheManager:
             debug=self.config("local_dev_env"),
             processname="disk_manager",
         )
-        setup_metrics(
+        set_up_metrics(
             statsd_host=self.config("statsd_host"),
             statsd_port=self.config("statsd_port"),
             statsd_namespace=self.config("statsd_namespace"),
@@ -239,7 +239,7 @@ class DiskCacheManager:
             removed += rm_size
             os.remove(rm_path)
             LOGGER.debug(f"evicted {rm_path} {rm_size:,d}")
-            METRICS.incr("eliot.diskcache.evict")
+            METRICS.incr("diskcache.evict")
 
         self.total_size -= removed
 
@@ -355,7 +355,7 @@ class DiskCacheManager:
                     LOGGER.debug(
                         f"lru: count {len(self.lru)}, size {self.total_size:,d}"
                     )
-                    METRICS.gauge("eliot.diskcache.usage", value=self.total_size)
+                    METRICS.gauge("diskcache.usage", value=self.total_size)
                     processed_events = False
 
                 yield
