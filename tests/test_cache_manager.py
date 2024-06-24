@@ -402,6 +402,8 @@ def test_nested_directories(cm_client, tmpdir):
     file1 = subdir1 / "file1.symc"
     file1.write_bytes(b"abcde")
 
+    time.sleep(0.5)
+
     file2 = subdir1 / "file2.symc"
     file2.write_bytes(b"abcd")
 
