@@ -38,7 +38,7 @@ from eliot.health_resource import (
 )
 from eliot.libdockerflow import get_release_name
 from eliot.liblogging import setup_logging, log_config
-from eliot.libmarkus import setup_metrics, METRICS
+from eliot.libmarkus import set_up_metrics, METRICS
 from eliot.symbolicate_resource import SymbolicateV4, SymbolicateV5
 
 
@@ -59,7 +59,7 @@ SCRUB_RULES_ELIOT = [
 
 
 def count_sentry_scrub_error(msg):
-    METRICS.incr("eliot.sentry_scrub_error", value=1, tags=["service:webapp"])
+    METRICS.incr("sentry_scrub_error", value=1, tags=["service:webapp"])
 
 
 def configure_sentry(app_config):
@@ -100,6 +100,7 @@ class IndexResource:
         self.data = (Path(self.staticroot_dir) / "index.html").read_text()
 
     def on_get(self, req, resp):
+        METRICS.incr("pageview", tags=["path:/", "method:get"])
         resp.content_type = falcon.MEDIA_HTML
         resp.status = falcon.HTTP_200
         resp.text = self.data
@@ -179,7 +180,7 @@ class EliotApp(falcon.App):
         log_config(LOGGER, self.config_manager, self)
 
         # Set up metrics
-        setup_metrics(
+        set_up_metrics(
             statsd_host=self.config("statsd_host"),
             statsd_port=self.config("statsd_port"),
             statsd_namespace=self.config("statsd_namespace"),

@@ -4,10 +4,6 @@
 Metrics
 =======
 
-.. contents::
-   :local:
-
-
 Metrics in Eliot
 ================
 

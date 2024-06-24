@@ -10,13 +10,13 @@ import json
 import logging
 import os
 
+from eliot.libmarkus import METRICS
+
 from dockerflow.version import get_version
 import falcon
-import markus
 
 
 LOGGER = logging.getLogger(__name__)
-METRICS = markus.get_metrics(__name__)
 
 
 class BrokenResource:
@@ -24,7 +24,7 @@ class BrokenResource:
 
     def on_get(self, req, resp):
         """Implement GET HTTP request."""
-        METRICS.incr("broken.count")
+        METRICS.incr("pageview", tags=["path:/__broken__", "method:get"])
         # This is intentional breakage
         raise Exception("intentional exception")
 
@@ -37,7 +37,7 @@ class VersionResource:
 
     def on_get(self, req, resp):
         """Implement GET HTTP request."""
-        METRICS.incr("version.count")
+        METRICS.incr("pageview", tags=["path:/__version__", "method:get"])
         resp.status = falcon.HTTP_200
         LOGGER.info(
             "version: basedir: %s, exists?: %s",
@@ -52,7 +52,7 @@ class LBHeartbeatResource:
 
     def on_get(self, req, resp):
         """Implement GET HTTP request."""
-        METRICS.incr("lbheartbeat.count")
+        METRICS.incr("pageview", tags=["path:/__lbheartbeat__", "method:get"])
         resp.content_type = "application/json; charset=utf-8"
         resp.status = falcon.HTTP_200
 
@@ -62,6 +62,6 @@ class HeartbeatResource:
 
     def on_get(self, req, resp):
         """Implement GET HTTP request."""
-        METRICS.incr("heartbeat.count")
+        METRICS.incr("pageview", tags=["path:/__heartbeat__", "method:get"])
         resp.content_type = "application/json; charset=utf-8"
         resp.status = falcon.HTTP_200

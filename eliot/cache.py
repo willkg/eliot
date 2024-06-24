@@ -161,9 +161,7 @@ class DiskCache:
                 data = self.read_from_file(filepath)
 
                 delta = (time.perf_counter() - start_time) * 1000.0
-                METRICS.histogram(
-                    "eliot.diskcache.get", value=delta, tags=["result:hit"]
-                )
+                METRICS.histogram("diskcache.get", value=delta, tags=["result:hit"])
                 return data
             except CacheReadError:
                 error = True
@@ -171,7 +169,7 @@ class DiskCache:
 
         delta = (time.perf_counter() - start_time) * 1000.0
         METRICS.histogram(
-            "eliot.diskcache.get",
+            "diskcache.get",
             value=delta,
             tags=["result:" + ("error" if error else "miss")],
         )
@@ -197,4 +195,4 @@ class DiskCache:
         result = "success" if ret else "fail"
 
         delta = (time.perf_counter() - start_time) * 1000.0
-        METRICS.histogram("eliot.diskcache.set", value=delta, tags=["result:" + result])
+        METRICS.histogram("diskcache.set", value=delta, tags=["result:" + result])
