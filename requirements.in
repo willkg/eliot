@@ -13,7 +13,7 @@ jsonschema==4.22.0
 markus[datadog]==5.0.0
 msgpack==1.0.8
 pip-tools==7.4.1
-pytest==8.2.1
+pytest==8.2.2
 PyYAML==6.0.1
 requests==2.32.3
 requests-mock==1.12.1
