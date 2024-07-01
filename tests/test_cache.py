@@ -58,7 +58,7 @@ class TestDiskCache:
         diskcache.write_to_file(filepath, data)
 
         assert diskcache.get(key) == data
-        assert type(diskcache.get(key)) == type(data)
+        assert type(diskcache.get(key)) is type(data)
 
     def test_get_error(self, tmpcachedir, tmpdir):
         """If the key doesn't exist, a get raises a KeyError"""
