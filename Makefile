@@ -94,8 +94,8 @@ lintfix: .env .docker-build  ## | Reformat code.
 
 .PHONY: rebuildreqs
 rebuildreqs: .env .docker-build  ## | Rebuild requirements.txt file after requirements.in changes.
-	${DC} run --rm --no-deps eliot bash pip-compile --generate-hashes
+	${DC} run --rm --no-deps eliot bash pip-compile --generate-hashes --strip-extras
 
 .PHONY: updatereqs
 updatereqs: .env .docker-build  ## | Update deps in requirements.txt file.
-	${DC} run --rm --no-deps eliot bash pip-compile --generate-hashes -U
+	${DC} run --rm --no-deps eliot bash pip-compile --generate-hashes --strip-extras -U

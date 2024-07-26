@@ -219,12 +219,15 @@ def test_eviction_of_least_recently_used(cm_client, tmpdir):
     # Add some files
     file1 = cachedir / "cache" / "xul__rose.symc"
     file1.write_bytes(b"ab")
+    time.sleep(0.5)
 
     file2 = cachedir / "cache" / "xul__dandelion.symc"
     file2.write_bytes(b"ab")
+    time.sleep(0.5)
 
     file3 = cachedir / "cache" / "xul__orchid.symc"
     file3.write_bytes(b"ab")
+    time.sleep(0.5)
 
     file4 = cachedir / "cache" / "xul__iris.symc"
     file4.write_bytes(b"ab")
