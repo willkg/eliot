@@ -26,7 +26,7 @@ class TestHTTPSource:
         source = HTTPSource(FAKE_HOST)
         ret = source.get("xul.so", "ABCDE", "xul.sym")
         assert ret == data
-        assert type(ret) == type(data)
+        assert type(ret) is type(data)
 
     def test_get_404(self, requestsmock):
         requestsmock.get(FAKE_HOST + "/xul.so/ABCDE/xul.sym", status_code=404)
