@@ -4,7 +4,10 @@
 Metrics
 =======
 
-Metrics in Eliot
-================
+StatsD Metrics in Eliot
+=======================
 
-.. autometrics:: eliot.libmarkus.ELIOT_METRICS
+Eliot uses `StatsD <https://github.com/statsd/statsd>`__ with
+`DogStatsD extensions <https://docs.datadoghq.com/developers/dogstatsd/?tab=hostagent>`__.
+
+.. autometrics:: eliot.libmarkus.STATSD_METRICS

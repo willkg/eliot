@@ -55,7 +55,7 @@ extensions = [
     "sphinx.ext.extlinks",
     "sphinxcontrib.httpdomain",
     "everett.sphinxext",
-    "exts.eliot_metrics",
+    "exts.document_metrics",
     "exts.adr_log",
 ]
 
@@ -75,8 +75,8 @@ master_doc = "index"
 
 # General information about the project.
 project = "Eliot: Mozilla Symbolication Services"
-copyright = "2020-2022 Mozilla Foundation"
-author = "Eliot team"
+copyright = "2020-2024 Mozilla Foundation"
+author = "Observability Team"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

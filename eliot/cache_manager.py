@@ -104,7 +104,6 @@ class DiskCacheManager:
         )
         statsd_host = Option(default="localhost", doc="Hostname for statsd server.")
         statsd_port = Option(default="8124", doc="Port for statsd server.", parser=int)
-        statsd_namespace = Option(default="", doc="Namespace for statsd metrics.")
         secret_sentry_dsn = Option(
             default="",
             doc=(
@@ -161,7 +160,6 @@ class DiskCacheManager:
         set_up_metrics(
             statsd_host=self.config("statsd_host"),
             statsd_port=self.config("statsd_port"),
-            statsd_namespace=self.config("statsd_namespace"),
             hostname=self.config("hostname"),
             debug=self.config("local_dev_env"),
         )
