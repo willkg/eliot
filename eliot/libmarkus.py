@@ -12,13 +12,13 @@ from pathlib import Path
 
 import markus
 from markus.filters import AddTagFilter, RegisteredMetricsFilter
-
 import yaml
 
 
 _IS_MARKUS_SET_UP = False
 
 LOGGER = logging.getLogger(__name__)
+METRICS = markus.get_metrics("eliot")
 
 
 @dataclass
@@ -27,25 +27,24 @@ class Metric:
     description: str
 
 
-# Complete index of all Eliot metrics. This is used in documentation and to filter
+# Complete index of all metrics. This is used in documentation and to filter
 # outgoing metrics.
 def _load_registered_metrics():
-    # Load the eliot_metrics.yaml file in this directory
-    path = Path(__file__).parent / "eliot_metrics.yaml"
+    # Load the metrics yaml file in this directory
+    path = Path(__file__).parent / "statsd_metrics.yaml"
     with open(path) as fp:
         data = yaml.safe_load(fp)
     return data
 
 
-ELIOT_METRICS = _load_registered_metrics()
+STATSD_METRICS = _load_registered_metrics()
 
 
-def set_up_metrics(statsd_host, statsd_port, statsd_namespace, hostname, debug=False):
+def set_up_metrics(statsd_host, statsd_port, hostname, debug=False):
     """Initialize and configures the metrics system.
 
     :arg statsd_host: the statsd host to send metrics to
     :arg statsd_port: the port on the host to send metrics to
-    :arg statsd_namespace: the namespace (if any) for these metrics
     :arg hostname: the host name
     :arg debug: whether or not to additionally log metrics to the logger
 
@@ -60,7 +59,6 @@ def set_up_metrics(statsd_host, statsd_port, statsd_namespace, hostname, debug=F
             "options": {
                 "statsd_host": statsd_host,
                 "statsd_port": statsd_port,
-                "statsd_namespace": statsd_namespace,
             },
         }
     ]
@@ -74,13 +72,10 @@ def set_up_metrics(statsd_host, statsd_port, statsd_namespace, hostname, debug=F
                 },
             }
         )
-    markus.configure(markus_backends)
-
-    if debug:
         # In local dev and test environments, we want the RegisteredMetricsFilter to
-        # raise exceptions when metrics are used incorrectly.
+        # raise exceptions when metrics are emitted but not documented.
         metrics_filter = RegisteredMetricsFilter(
-            registered_metrics=ELIOT_METRICS, raise_error=True
+            registered_metrics=STATSD_METRICS, raise_error=True
         )
         METRICS.filters.append(metrics_filter)
 
@@ -89,7 +84,6 @@ def set_up_metrics(statsd_host, statsd_port, statsd_namespace, hostname, debug=F
         # FIXME(willkg): do we need to cleanse the hostname?
         METRICS.filters.append(AddTagFilter(f"host:{hostname}"))
 
+    markus.configure(markus_backends)
+
     _IS_MARKUS_SET_UP = True
-
-
-METRICS = markus.get_metrics("eliot")
