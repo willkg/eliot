@@ -10,18 +10,36 @@ from everett.manager import ConfigManager, ConfigDictEnv, ConfigOSEnv
 from falcon.request import Request
 from falcon.testing.helpers import create_environ
 from falcon.testing.client import TestClient
-import markus
 from markus.testing import MetricsMock
 import pytest
 import requests_mock
 import shutil
 
+
 # Add the eliot project root to sys.path, otherwise tests can't find it
 SYMROOT = str(Path(__file__).parent.parent)
 sys.path.insert(0, SYMROOT)
 
-from eliot.app import get_app  # noqa
+
+from eliot.app import build_config_manager, EliotApp, get_app  # noqa
 from eliot.liblogging import set_up_logging  # noqa
+from eliot.libmarkus import set_up_metrics  # noqa
+
+
+def pytest_sessionstart(session):
+    config = build_config_manager().with_options(EliotApp)
+    # Set up logging and metrics to sensible default values at pytest session start
+    set_up_logging(
+        logging_level="DEBUG",
+        debug=True,
+        processname="tests",
+    )
+    set_up_metrics(
+        statsd_host=config("statsd_host"),
+        statsd_port=config("statsd_port"),
+        hostname=config("hostname"),
+        debug=config("local_dev_env"),
+    )
 
 
 def pytest_runtest_setup(item):
@@ -30,17 +48,6 @@ def pytest_runtest_setup(item):
 
     if os.path.exists(cachedir):
         shutil.rmtree(cachedir, ignore_errors=True)
-
-
-def pytest_collection_finish(session):
-    # After pytest test collection has finished, make sure we set up logging and metrics
-    # to sensible default values.
-    set_up_logging(
-        logging_level="DEBUG",
-        debug=True,
-        processname="tests",
-    )
-    markus.configure([{"class": "markus.backends.logging.LoggingMetrics"}])
 
 
 @pytest.fixture
