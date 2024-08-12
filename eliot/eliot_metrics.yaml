@@ -25,16 +25,6 @@ eliot.symbolicate.api:
       * ``v4``: the v4 API
       * ``v5``: the v5 API
 
-eliot.symbolicate.proxied:
-  type: "incr"
-  description: |
-    Counter for symbolication requests tagged by whether they
-    were proxied or not.
-
-    Tags:
-
-        * ``proxied``: "1" if proxied, "0" if not
-
 eliot.symbolicate.request_error:
   type: "incr"
   description: |

@@ -205,26 +205,6 @@ class SymbolicateBase:
         self.cache = cache
         self.tmpdir = tmpdir
 
-    def check_proxied(self, req):
-        """Checks if the request was proxied and emits an incr
-
-        We split the symbolication API out to its own service and domain and changed the
-        nginx configuration for the old domain to proxy symbolication API requests to
-        the new one. When a request is proxied, this header is added::
-
-            TeckenProxied: 1
-
-        We want to see proxied vs. non-proxied requests, so we capture that in this
-        method.
-
-        We can remove this once we no longer need to proxy requests.
-
-        :arg req: the Request
-
-        """
-        is_proxied = req.get_header("TeckenProxied", default="0")
-        METRICS.incr("symbolicate.proxied", tags=[f"proxied:{is_proxied}"])
-
     def download_sym_file(self, debug_filename, debug_id):
         """Download a symbol file.
 
@@ -631,7 +611,6 @@ class SymbolicateV4(SymbolicateBase):
     @METRICS.timer_decorator("symbolicate.api", tags=["version:v4"])
     def on_post(self, req, resp):
         METRICS.incr("pageview", tags=["path:/symbolicate/v4", "method:post"])
-        self.check_proxied(req)
 
         # NOTE(willkg): we define this and pass it around, but don't return it in the
         # results because this API is deprecated
@@ -677,7 +656,6 @@ class SymbolicateV5(SymbolicateBase):
     @METRICS.timer_decorator("symbolicate.api", tags=["version:v5"])
     def on_post(self, req, resp):
         METRICS.incr("pageview", tags=["path:/symbolicate/v5", "method:post"])
-        self.check_proxied(req)
 
         payload = _load_payload(req)
 
