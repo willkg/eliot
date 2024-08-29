@@ -33,6 +33,7 @@ jobs:
         gh api "repos/${{ github.repository }}/deployments" \
             -f environment="${{ inputs.environment }}" \
             -f ref="${{ inputs.ref }}" \
+            -F auto_merge=false \
             -F required_contexts[] \
             -F payload[image_tag]="${{ inputs.image_tag }}"
       env:
