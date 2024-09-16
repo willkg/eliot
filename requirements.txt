@@ -607,9 +607,9 @@ symbolic==12.11.0 \
     --hash=sha256:9aa54b8b67a7b27d1c432d7fba38e926091be019890f42d510da09c4865e502c \
     --hash=sha256:ffa249f71525ab2451b47ffb4b22d1135ce290c7da772afee59cff3c58d7a6b2
     # via -r requirements.in
-urllib3==2.2.2 \
-    --hash=sha256:a448b2f64d686155468037e1ace9f2d2199776e17f0a46610480d311f73e3472 \
-    --hash=sha256:dd505485549a7a552833da5e6063639d0d177c04f23bc3864e41e5dc5f612168
+urllib3==2.2.3 \
+    --hash=sha256:ca899ca043dcb1bafa3e262d73aa25c465bfb49e0bd9dd5d59f1d0acba2f8fac \
+    --hash=sha256:e7d814a81dad81e6caf2ec9fdedb284ecc9c73076b62654547cc64ccdcae26e9
     # via
     #   -r requirements.in
     #   requests
