@@ -99,9 +99,9 @@ click==8.1.7 \
     # via
     #   -r requirements.in
     #   pip-tools
-datadog==0.50.0 \
-    --hash=sha256:3a58e85f8da47c4a47893b42c759570ba0280cd212413d9b7246cb8fcb86f586 \
-    --hash=sha256:bac96fa0ef555cb10e828c05a7810a13db2bf3bfed34813fac45d3c9a2227b43
+datadog==0.50.1 \
+    --hash=sha256:579d4db54bd6ef918c5250217edb15b80b7b11582b8e24fce43702768c3f2e2d \
+    --hash=sha256:eb101abee34fe6c1121558fd5ea48f592eb661604abb7914c4f693d8ad25a515
     # via
     #   -r requirements.in
     #   markus
