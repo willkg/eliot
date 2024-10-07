@@ -600,12 +600,12 @@ sphinxcontrib-serializinghtml==1.1.9 \
     --hash=sha256:0c64ff898339e1fac29abd2bf5f11078f3ec413cfe9c046d3120d7ca65530b54 \
     --hash=sha256:9b36e503703ff04f20e9675771df105e58aa029cfcbc23b8ed716019b7416ae1
     # via sphinx
-symbolic==12.11.1 \
-    --hash=sha256:5b12c1dfeb7ee55171246fe64f44fb8a1035a6b585009195bd5539ea6022b700 \
-    --hash=sha256:6835ffdee787baf4ca00cc8540dcf9902911aeab247925e74bb1108d0038e9e9 \
-    --hash=sha256:a1540905703f7b0ed389f88de50aa092dfadb8552129c3de72ee214d29e8a683 \
-    --hash=sha256:a1f0b15ebfe172ddd72292298910e4276f0a87bd4415e1317ed37607bf41ad33 \
-    --hash=sha256:b9c3e728d16f1cd71a4fc4612d3deecbd4d49e1026141c1d2e3221d01bc667fb
+symbolic==12.12.0 \
+    --hash=sha256:4e990af86deb859ef3fe90b18e6ecfb053512c40bd8ed8dc8d20f4c34c9254b8 \
+    --hash=sha256:6d19a1bd29a1dcfb73a03a0be1f67b4e96d7be85eaf34693d19b53a525e7fb85 \
+    --hash=sha256:976ffdcb94d2a7f45b4e4ada5857f2510e38df5ee4edb6469fadd71ff606b23e \
+    --hash=sha256:a3cbe3dddbf2dfb7c259fa74f0b95a6cdb51ecad4ca1ec0a20f9544d7b6fc578 \
+    --hash=sha256:ebd94c908c8c20aa1391e9f0f1d3649bbf40a9b35d0e10c941c2a0e3e1e4ad5a
     # via -r requirements.in
 urllib3==2.2.3 \
     --hash=sha256:ca899ca043dcb1bafa3e262d73aa25c465bfb49e0bd9dd5d59f1d0acba2f8fac \
