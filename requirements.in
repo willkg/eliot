@@ -21,7 +21,7 @@ ruff==0.6.9
 sentry-sdk==2.7.1
 Sphinx==8.0.2
 sphinxcontrib-httpdomain==1.8.1
-sphinx-rtd-theme==3.0.0
+sphinx-rtd-theme==3.0.1
 symbolic==12.12.0
 urllib3==2.2.3
 werkzeug==3.0.4
