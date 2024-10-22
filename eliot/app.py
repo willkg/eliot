@@ -264,7 +264,7 @@ class EliotApp(falcon.App):
             )
 
             event["transaction"] = req.path
-            scope.capture_event(event, hint=hint)
+            scope.get_client().capture_event(event, hint=hint)
 
         LOGGER.error("Unhandled exception", exc_info=sys.exc_info())
         self._compose_error_response(req, resp, HTTPInternalServerError())
