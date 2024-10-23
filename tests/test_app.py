@@ -20,4 +20,4 @@ class TestIndexAndStatic:
     def test_static_page(self, client):
         result = client.simulate_get("/static/pageload.js")
         assert result.status_code == 200
-        assert result.headers["Content-Type"].startswith("application/javascript")
+        assert result.headers["Content-Type"].startswith("text/javascript")
