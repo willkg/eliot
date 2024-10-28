@@ -62,6 +62,7 @@ services:
         groupid: ${USE_GID:-10001}
     image: eliot-devcontainer
     entrypoint: ["sleep", "inf"]
+    stop_signal: SIGKILL  # Doesn't seem to respond to anything else
 
   # https://github.com/willkg/kent
   fakesentry:
@@ -71,6 +72,7 @@ services:
     ports:
       - "${EXPOSE_SENTRY_PORT:-8090}:8090"
     command: run --host 0.0.0.0 --port 8090
+    stop_signal: SIGINT
 
   # https://hub.docker.com/r/hopsoft/graphite-statsd/
   statsd:
