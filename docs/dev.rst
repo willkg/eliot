@@ -123,7 +123,7 @@ example::
     bug-nnnnnnn: removed frog from tree class
 
 For multiple bugs fixed within a single pull request, list the bugs out individually. For example::
-   
+
    bug-nnnnnnn, bug-nnnnnnn: removed frog from tree class
 
 Pull request descriptions should cover at least some of the following:
@@ -395,3 +395,16 @@ the container to pick up changes:
 .. code-block:: shell
 
    $ make devcontainer
+
+How to upgrade the Python version
+---------------------------------
+
+To upgrade Python to a new minor or major version, you need to change the version in
+these files:
+
+* ``.devcontainer/Dockerfile``
+* ``.github/dependabot.yml``
+* ``.readthedocs.yaml``
+* ``docker/Dockerfile``
+* ``docker/images/fakesentry/Dockerfile``
+* ``pyproject.toml``
