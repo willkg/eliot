@@ -11,7 +11,7 @@ updates:
   - package-ecosystem: "docker"
     directories:
       - "/docker"
-      - "/docker/images/fakesentry"
+      - "/docker/images/*"
     schedule:
       interval: "weekly"
     rebase-strategy: "disabled"
