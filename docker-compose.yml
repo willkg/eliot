@@ -1,5 +1,4 @@
 ---
-version: '2.4'
 services:
   # Base container is used for development tasks like tests, linting,
   # and building docs.
@@ -27,8 +26,6 @@ services:
     links:
       - fakesentry
       - statsd
-    volumes:
-      - $PWD:/app
     command: ["eliot"]
 
   # Container specifically for running tests.
@@ -40,17 +37,7 @@ services:
       - docker/config/test.env
     links:
       - fakesentry
-    volumes:
-      - $PWD:/app
-
-  test-ci:
-    extends:
-      service: base
-    env_file:
-      - docker/config/local_dev.env
-      - docker/config/test.env
-    links:
-      - fakesentry
+      - statsd
 
   devcontainer:
     extends:
@@ -63,6 +50,8 @@ services:
     image: eliot-devcontainer
     entrypoint: ["sleep", "inf"]
     stop_signal: SIGKILL  # Doesn't seem to respond to anything else
+    volumes:
+      - $PWD:/app
 
   # https://github.com/willkg/kent
   fakesentry:

@@ -9,7 +9,7 @@ Development
 Setup quickstart
 ================
 
-1. Install required software: Docker, make, and git.
+1. Install required software: Docker, just, and git.
 
    **Linux**:
 
@@ -19,17 +19,17 @@ Setup quickstart
 
        Install `Docker for Mac <https://docs.docker.com/docker-for-mac/>`_.
 
-       Use `homebrew <https://brew.sh>`_ to install make and git:
+       Use `homebrew <https://brew.sh>`_ to install just and git:
 
        .. code-block:: shell
 
-          $ brew install make git
+          $ brew install just git
 
    **Other**:
 
        Install `Docker <https://docs.docker.com/engine/installation/>`_.
 
-       Install `make <https://www.gnu.org/software/make/>`_.
+       Install `just <https://just.systems/man/en/packages.html>`_.
 
        Install `git <https://git-scm.com/>`_.
 
@@ -45,13 +45,13 @@ Setup quickstart
 
    .. code-block:: shell
 
-      $ make .env
+      $ just _env
 
-   Then edit the file and set the ``APP_UID`` and ``APP_GID`` variables. These
+   Then edit the file and set the ``USE_UID`` and ``USE_GID`` variables. These
    will get used when creating the app user in the base image.
 
    If you ever want different values, change them in ``.env`` and re-run
-   ``make build``.
+   ``just build``.
 
 4. Build Docker images.
 
@@ -59,7 +59,7 @@ Setup quickstart
 
    .. code-block:: shell
 
-      $ make build
+      $ just build
 
    That will build the app Docker image required for development.
 
@@ -70,7 +70,7 @@ To run Eliot, do:
 
 .. code-block:: shell
 
-   $ make run
+   $ just run
 
 
 The webapp is at `<http://localhost:8000>`__.
@@ -204,14 +204,14 @@ To lint all the code, do:
 
 .. code-block:: bash
 
-  $ make lint
+  $ just lint
 
 
 To reformat all the code, do:
 
 .. code-block:: bash
 
-  $ make lintfix
+  $ just lint --fix
 
 
 HTML/CSS conventions
@@ -245,13 +245,13 @@ To add a new dependency, add it to the file and then do:
 
 .. code-block:: shell
 
-   $ make rebuildreqs
+   $ just rebuild-reqs
 
 Then rebuild your docker environment:
 
 .. code-block:: shell
 
-  $ make build
+  $ just build
 
 If there are problems, it'll tell you.
 
@@ -260,7 +260,7 @@ dependencies. To do this, run:
 
 .. code-block:: shell
 
-   $ make updatereqs
+   $ just rebuild-reqs --update
 
 
 Configuration
@@ -303,7 +303,7 @@ To build the docs, do:
 
 .. code-block:: shell
 
-  $ make docs
+  $ just docs
 
 Then view ``docs/_build/html/index.html`` in your browser.
 
@@ -317,7 +317,7 @@ To run all the tests, do:
 
 .. code-block:: shell
 
-   $ make test
+   $ just test
 
 Tests for the Symbolication Service webapp go in ``tests/``.
 
@@ -326,7 +326,7 @@ the testshell:
 
 .. code-block:: shell
 
-   $ make testshell
+   $ just test-shell
    app@xxx:/app$ pytest
 
    <pytest output>
@@ -355,7 +355,7 @@ first run:
 
 .. code-block:: shell
 
-   $ make devcontainerbuild
+   $ just build devcontainer
 
 Additionally on mac there is the potential that running git from inside any
 container that mounts the current directory to `/app`, such as the development
@@ -375,7 +375,7 @@ by app:app, so that's fine:
 How to change settings in your local dev environment
 ----------------------------------------------------
 Edit the ``.env`` file and add/remove/change settings. These environment
-variables are used by make and automatically included by docker compose.
+variables are automatically included by docker compose and just.
 
 If you are using a VS Code development container for other repositories such as
 `tecken <https://github.com/mozilla-services/tecken>`_ or
@@ -394,7 +394,7 @@ the container to pick up changes:
 
 .. code-block:: shell
 
-   $ make devcontainer
+   $ just run -d devcontainer
 
 How to upgrade the Python version
 ---------------------------------
