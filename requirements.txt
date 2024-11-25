@@ -480,8 +480,8 @@ msgpack==1.1.0 \
     --hash=sha256:f80bc7d47f76089633763f952e67f8214cb7b3ee6bfa489b3cb6a84cfac114cd \
     --hash=sha256:fd2906780f25c8ed5d7b323379f6138524ba793428db5d0e9d226d3fa6aa1788
     # via -r requirements.in
-obs-common==2024.11.7 \
-    --hash=sha256:be6f17329f037abf0b47c362ce2b084fcebff0c299e4791d4c3256f279a1880c
+obs-common==2024.11.21 \
+    --hash=sha256:601c60f79a052d2f0440bdb0da4875f8bdde9fc9f91918d3841a9f6c0b206456
     # via -r requirements.in
 opentelemetry-api==1.28.2 \
     --hash=sha256:6fcec89e265beb258fe6b1acaaa3c8c705a934bd977b9f534a2b7c0d2d4275a6 \
