@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 python:3.11.10-slim-bullseye@sha256:d910a25afa706e0b2da4b59990fb59c0495eeab597b5cd777bbdcda8b6530b7e
+FROM --platform=linux/amd64 python:3.11.11-slim-bullseye@sha256:e32fb39f8ca1bc1736579469c6f175d2dfff2bb9170865d706d5da461b708bb6
 
 ARG groupid=5000
 ARG userid=5000
